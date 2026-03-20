@@ -9,11 +9,13 @@ import NewTaskSheet from '@/components/tasks/NewTaskSheet'
 import BreakdownSheet from '@/components/tasks/BreakdownSheet'
 import BookmarkSheet from '@/components/tasks/BookmarkSheet'
 import TimerModal from '@/components/timer/TimerModal'
+import { Card } from '@/components/ui/card'
 import { formatDisplayDate, todayDate } from '@/lib/utils'
 import type { Task } from '@/types'
 import { toast } from 'sonner'
 
 const energyLabels = ['', '😴 Muito baixa', '😕 Baixa', '😐 Média', '😊 Boa', '⚡ Ótima']
+const energyEmojis = ['', '😴', '😕', '😐', '😊', '⚡']
 
 export default function TodayPage() {
   const { tasks, loading, createTask, completeTask, deleteTask, saveSteps, toggleStep, saveContextBookmark } = useTasks()
@@ -53,26 +55,26 @@ export default function TodayPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#0f0f0f]">
+    <div className="min-h-screen bg-[#0d0d0d]">
       {/* Header */}
-      <div className="px-4 pt-12 pb-4 space-y-1">
+      <div className="px-5 pt-14 pb-5 space-y-1.5">
         <div className="flex items-center gap-2">
-          <div className="w-6 h-6 rounded-lg bg-violet-600 flex items-center justify-center">
-            <Zap className="w-3 h-3 text-white" fill="currentColor" />
+          <div className="w-7 h-7 rounded-xl bg-violet-600 flex items-center justify-center">
+            <Zap className="w-4 h-4 text-white" fill="currentColor" />
           </div>
-          <span className="text-xs text-zinc-500 capitalize">{formatDisplayDate(today)}</span>
+          <span className="text-sm text-zinc-500 capitalize">{formatDisplayDate(today)}</span>
         </div>
-        <h1 className="text-2xl font-bold text-white">Hoje</h1>
+        <h1 className="text-3xl font-bold text-white tracking-tight">Hoje</h1>
       </div>
 
-      <div className="px-4 space-y-6 pb-8">
+      <div className="px-5 space-y-6 pb-32">
 
         {/* Energy Level */}
-        <div className="bg-zinc-900 rounded-2xl p-4 border border-zinc-800 space-y-3">
+        <Card className="bg-zinc-900 border-zinc-800 rounded-2xl p-5 space-y-4">
           <div className="flex items-center justify-between">
-            <p className="text-sm font-medium text-zinc-200">Como está sua energia?</p>
+            <p className="text-base font-semibold text-zinc-100">Como está sua energia?</p>
             {plan?.energy_level && (
-              <span className="text-xs text-zinc-500">{energyLabels[plan.energy_level]}</span>
+              <span className="text-sm text-zinc-400">{energyLabels[plan.energy_level]}</span>
             )}
           </div>
           <div className="flex gap-2">
@@ -80,42 +82,42 @@ export default function TodayPage() {
               <button
                 key={level}
                 onClick={() => setEnergyLevel(level)}
-                className={`flex-1 h-8 rounded-lg text-sm font-bold transition-all ${
+                className={`flex-1 h-11 rounded-xl text-lg font-bold transition-all active:scale-95 ${
                   plan?.energy_level === level
-                    ? 'bg-violet-600 text-white scale-105'
-                    : 'bg-zinc-800 text-zinc-500 hover:bg-zinc-700'
+                    ? 'bg-violet-600 text-white shadow-md shadow-violet-500/30 scale-105'
+                    : 'bg-zinc-800 text-zinc-400 hover:bg-zinc-700'
                 }`}
               >
-                {level}
+                {energyEmojis[level]}
               </button>
             ))}
           </div>
-        </div>
+        </Card>
 
         {/* Top 3 */}
         <div className="space-y-3">
           <div className="flex items-center justify-between">
-            <h2 className="text-sm font-semibold text-zinc-200 flex items-center gap-1.5">
+            <h2 className="text-base font-semibold text-zinc-100 flex items-center gap-2">
               <span className="text-violet-400">⚡</span> Top 3 de hoje
             </h2>
             <button
               onClick={handleSuggestTopThree}
               disabled={suggestingTopThree}
-              className="flex items-center gap-1 text-xs text-zinc-500 hover:text-violet-400 transition-colors"
+              className="flex items-center gap-1.5 text-sm text-zinc-500 hover:text-violet-400 transition-colors disabled:opacity-50"
             >
-              <Sparkles className="w-3 h-3" />
+              <Sparkles className="w-3.5 h-3.5" />
               {suggestingTopThree ? 'Sugerindo...' : 'Sugerir IA'}
             </button>
           </div>
 
           {topThree.length === 0 ? (
-            <div className="bg-zinc-900/50 border border-dashed border-zinc-800 rounded-2xl p-4 text-center">
-              <p className="text-xs text-zinc-600">
+            <Card className="bg-zinc-900/40 border-dashed border-zinc-800 rounded-2xl p-6 text-center">
+              <p className="text-sm text-zinc-600">
                 Adicione tarefas e use &quot;Sugerir IA&quot; para definir seu foco.
               </p>
-            </div>
+            </Card>
           ) : (
-            <div className="space-y-2">
+            <div className="space-y-2.5">
               {topThree.map(task => (
                 <TaskCard
                   key={task.id}
@@ -136,8 +138,8 @@ export default function TodayPage() {
         {/* Other tasks */}
         {otherTasks.length > 0 && (
           <div className="space-y-3">
-            <h2 className="text-sm font-semibold text-zinc-500">Outras tarefas</h2>
-            <div className="space-y-2">
+            <h2 className="text-sm font-semibold text-zinc-500 uppercase tracking-wider">Outras tarefas</h2>
+            <div className="space-y-2.5">
               {otherTasks.map(task => (
                 <TaskCard
                   key={task.id}
@@ -157,10 +159,13 @@ export default function TodayPage() {
         {/* Completed */}
         {completedTasks.length > 0 && (
           <div className="space-y-3">
-            <h2 className="text-sm font-semibold text-zinc-600 flex items-center gap-1.5">
-              ✅ Concluídas ({completedTasks.length})
+            <h2 className="text-sm font-semibold text-zinc-600 flex items-center gap-2">
+              ✅ Concluídas
+              <span className="bg-zinc-800 text-zinc-500 text-xs px-2 py-0.5 rounded-full">
+                {completedTasks.length}
+              </span>
             </h2>
-            <div className="space-y-2">
+            <div className="space-y-2.5">
               {completedTasks.map(task => (
                 <TaskCard
                   key={task.id}
@@ -179,11 +184,11 @@ export default function TodayPage() {
 
         {/* Empty state */}
         {!loading && tasks.length === 0 && (
-          <div className="text-center py-12 space-y-3">
-            <div className="text-4xl">🧠</div>
-            <p className="text-zinc-400 font-medium">Tela em branco? Ótimo.</p>
-            <p className="text-zinc-600 text-sm">
-              Adicione uma tarefa e deixe a IA quebrar em micro-passos.
+          <div className="text-center py-16 space-y-4">
+            <div className="text-6xl">🧠</div>
+            <p className="text-zinc-300 font-semibold text-lg">Tela em branco? Ótimo.</p>
+            <p className="text-zinc-600 text-sm leading-relaxed">
+              Adicione uma tarefa e deixe a IA<br />quebrar em micro-passos.
             </p>
           </div>
         )}
@@ -192,9 +197,9 @@ export default function TodayPage() {
       {/* FAB */}
       <button
         onClick={() => setNewTaskOpen(true)}
-        className="fixed bottom-24 right-4 w-14 h-14 bg-violet-600 hover:bg-violet-500 rounded-full shadow-lg shadow-violet-500/25 flex items-center justify-center transition-all active:scale-95"
+        className="fixed bottom-24 right-5 w-15 h-15 bg-violet-600 hover:bg-violet-500 rounded-full shadow-xl shadow-violet-500/30 flex items-center justify-center transition-all active:scale-90 w-[60px] h-[60px]"
       >
-        <Plus className="w-6 h-6 text-white" strokeWidth={2.5} />
+        <Plus className="w-7 h-7 text-white" strokeWidth={2.5} />
       </button>
 
       {/* Sheets & Modals */}
