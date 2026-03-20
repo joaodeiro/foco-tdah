@@ -1,0 +1,38 @@
+{
+  "name": "Foco — Produtividade para TDAH",
+  "short_name": "Foco",
+  "description": "Sistema de produtividade construído para o cérebro TDAH 2e",
+  "start_url": "/app",
+  "display": "standalone",
+  "background_color": "#0f0f0f",
+  "theme_color": "#7c3aed",
+  "orientation": "portrait-primary",
+  "categories": ["productivity", "health", "lifestyle"],
+  "lang": "pt-BR",
+  "icons": [
+    {
+      "src": "/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Hoje",
+      "url": "/app",
+      "description": "Ver plano do dia"
+    },
+    {
+      "name": "Nova tarefa",
+      "url": "/app?new=1",
+      "description": "Criar tarefa rapidamente"
+    }
+  ]
+}
