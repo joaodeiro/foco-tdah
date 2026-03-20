@@ -1,12 +1,13 @@
 import type { Metadata, Viewport } from "next"
-import { Geist } from "next/font/google"
+import { Nunito } from "next/font/google"
 import { Toaster } from "@/components/ui/sonner"
 import PWARegister from "@/components/layout/PWARegister"
 import "./globals.css"
 
-const geist = Geist({
-  variable: "--font-geist",
+const nunito = Nunito({
+  variable: "--font-sans",
   subsets: ["latin"],
+  weight: ["400", "500", "600", "700", "800"],
 })
 
 export const metadata: Metadata = {
@@ -40,7 +41,7 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="pt-BR" className={`${geist.variable} h-full antialiased`}>
+    <html lang="pt-BR" className={`${nunito.variable} h-full antialiased`}>
       <head>
         <link rel="apple-touch-icon" href="/icons/icon-192.png" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
