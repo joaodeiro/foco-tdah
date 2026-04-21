@@ -1,30 +1,30 @@
 import Link from "next/link"
-import { ArrowRight, Brain, Timer, Sparkles, Compass } from "lucide-react"
+import { ArrowRight, Layers, Sparkles, Bookmark, BookOpen } from "lucide-react"
 
-const principles = [
+const mechanisms = [
   {
     num: '01',
-    icon: Brain,
-    title: "Neurociência aplicada",
-    body: "Fundamentado no trabalho de Barkley, Hallowell e Brown.",
+    icon: Layers,
+    title: "Estrutura que sobrevive ao cansaço",
+    body: "Sem meta diária obrigatória. Sem streak vermelho. O usuário de terça à noite com pouca energia encontra o mesmo app que deixou. O dia em que você aparece entra. O dia em que você não, fica neutro.",
   },
   {
     num: '02',
     icon: Sparkles,
-    title: "Tarefa em micro-passos",
-    body: "A IA quebra qualquer tarefa em ações pequenas o suficiente para começar agora.",
+    title: "IA que quebra a tarefa",
+    body: "“Escreva o relatório” vira “abra o documento X, escreva uma frase sobre Y”. O custo cognitivo de começar cai para próximo de zero. É o ponto exato de travamento em TDAH/2e.",
   },
   {
     num: '03',
-    icon: Timer,
-    title: "Timer para a cegueira temporal",
-    body: "Você vê o tempo passando. Visualização ajuda a mente TDAH a sentir a duração.",
+    icon: Bookmark,
+    title: "Contexto salvo entre interrupções",
+    body: "Você sai para atender o celular. Volta e vê o que tinha aberto, o próximo passo, onde parou. Retomar deixa de custar reiniciar do zero.",
   },
   {
     num: '04',
-    icon: Compass,
-    title: "Registro de conquistas",
-    body: "Streaks e diário que firmam o que você conseguiu fazer ao longo dos dias.",
+    icon: BookOpen,
+    title: "Fundamentação real, sem bro-science",
+    body: "Desenhado a partir da pesquisa de Barkley, Hallowell, Brown e da literatura sobre dupla excepcionalidade (Silverman, Dabrowski). Sem detox de dopamina. Sem prometer milagre.",
   },
 ]
 
@@ -50,30 +50,32 @@ export default function LandingPage() {
         <div className="flex items-center gap-4 mb-6">
           <span className="serial">§ 00</span>
           <span className="flex-1 h-px bg-hairline" />
-          <span className="serial">Para o cérebro 2e · PT-BR</span>
+          <span className="serial">Acesso Alfa · PT-BR</span>
         </div>
         <h1 className="font-serif text-5xl md:text-7xl leading-[1.02] tracking-tight text-ink">
-          Produtividade
+          O app que você
           <br />
-          pensada na escala
+          continua usando
           <br />
-          do cérebro <em className="text-terracotta">TDAH</em>.
+          depois do <em className="text-terracotta">dia 15</em>.
         </h1>
-        <p className="mt-8 max-w-lg text-lg text-ink-muted leading-relaxed">
-          Kairos, em grego, é o momento oportuno para agir. A janela
-          exata em que começar é possível. Este app ajuda você a
-          reconhecer essa janela e entrar nela.
+        <p className="mt-8 max-w-xl text-lg text-ink-muted leading-relaxed">
+          Para quem já abandonou três apps de produtividade. Nenhum deles
+          era ruim. O que quebra sempre no dia 15 está em outro lugar.
+          É pra isso que Kairos existe.
         </p>
 
         <div className="mt-10 flex items-center gap-5 flex-wrap">
           <Link
-            href="/auth/login"
+            href="/auth/signup"
             className="group inline-flex items-center gap-2 bg-ink text-background px-6 py-3.5 rounded-full text-[15px] font-medium transition-all hover:bg-terracotta"
           >
-            Começar agora
+            Entrar no Acesso Alfa
             <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-0.5" />
           </Link>
-          <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-ink-faint">Grátis · Sem senha</span>
+          <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-ink-faint">
+            Grátis · Sem cartão
+          </span>
         </div>
       </section>
 
@@ -82,15 +84,46 @@ export default function LandingPage() {
         <div className="hairline" />
       </div>
 
-      {/* Principles */}
-      <section className="px-6 md:px-10 py-16 max-w-3xl mx-auto">
+      {/* Problem / pattern recognition */}
+      <section className="px-6 md:px-10 py-16 md:py-20 max-w-3xl mx-auto">
         <div className="flex items-center gap-4 mb-12">
           <span className="serial">§ 01</span>
           <span className="flex-1 h-px bg-hairline" />
-          <span className="serial">Princípios</span>
+          <span className="serial">O padrão</span>
+        </div>
+
+        <div className="space-y-6 max-w-xl">
+          <p className="font-serif text-2xl md:text-3xl leading-snug text-ink">
+            Baixou o Todoist. Abandonou em três semanas.
+          </p>
+          <p className="font-serif text-2xl md:text-3xl leading-snug text-ink">
+            Montou o Notion. Nunca usou o que montou.
+          </p>
+          <p className="font-serif text-2xl md:text-3xl leading-snug text-ink">
+            Voltou pro papel. Perdeu o papel.
+          </p>
+          <p className="font-serif text-2xl md:text-3xl leading-snug italic text-ink-muted">
+            Já olhou a Play Store procurando o próximo.
+          </p>
+        </div>
+
+        <p className="mt-12 max-w-xl text-[17px] text-ink-muted leading-relaxed">
+          O padrão se repete há uns dez anos. E a cada ciclo a voz é a mesma:
+          <em className="text-ink"> eu que não tenho disciplina</em>. Essa voz
+          está errada. No dia 15, o que falha é a forma como os apps
+          assumem que sua cabeça funciona como a de todo mundo.
+        </p>
+      </section>
+
+      {/* Mechanism */}
+      <section className="px-6 md:px-10 py-16 max-w-3xl mx-auto">
+        <div className="flex items-center gap-4 mb-12">
+          <span className="serial">§ 02</span>
+          <span className="flex-1 h-px bg-hairline" />
+          <span className="serial">Como funciona</span>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-14">
-          {principles.map(({ num, icon: Icon, title, body }) => (
+          {mechanisms.map(({ num, icon: Icon, title, body }) => (
             <div key={title} className="space-y-4 relative">
               <div className="flex items-center gap-3">
                 <span className="font-mono text-[11px] tracking-[0.1em] text-ink-faint tabular-nums">{num}</span>
@@ -104,10 +137,10 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Fundamento */}
+      {/* Fundamento / authority */}
       <section className="px-6 md:px-10 py-20 max-w-2xl mx-auto">
         <div className="flex items-center gap-4 mb-10">
-          <span className="serial">§ 02</span>
+          <span className="serial">§ 03</span>
           <span className="flex-1 h-px bg-hairline" />
           <span className="serial">Fundamento</span>
         </div>
@@ -118,22 +151,32 @@ export default function LandingPage() {
         <p className="mt-6 font-mono text-[11px] uppercase tracking-[0.22em] text-ink-faint text-center">Russell Barkley</p>
       </section>
 
-      {/* Final CTA */}
+      {/* Final CTA + stakes */}
       <section className="px-6 md:px-10 pb-24 max-w-3xl mx-auto">
         <div className="hairline mb-16" />
-        <div className="text-center space-y-8">
-          <h2 className="font-serif text-4xl md:text-5xl leading-tight text-ink">
-            Comece onde você está.
+        <div className="flex items-center gap-4 mb-10">
+          <span className="serial">§ 04</span>
+          <span className="flex-1 h-px bg-hairline" />
+          <span className="serial">Começar</span>
+        </div>
+        <div className="text-center space-y-10">
+          <h2 className="font-serif text-4xl md:text-5xl leading-tight text-ink max-w-2xl mx-auto">
+            Um sistema que continua lá
             <br />
-            <em>Agora.</em>
+            <em>quando você volta.</em>
           </h2>
-          <Link
-            href="/auth/login"
-            className="group inline-flex items-center gap-2 bg-ink text-background px-7 py-4 rounded-full text-[15px] font-medium transition-all hover:bg-terracotta"
-          >
-            Entrar em Kairos
-            <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-0.5" />
-          </Link>
+          <div className="space-y-4">
+            <Link
+              href="/auth/signup"
+              className="group inline-flex items-center gap-2 bg-ink text-background px-7 py-4 rounded-full text-[15px] font-medium transition-all hover:bg-terracotta"
+            >
+              Entrar no Acesso Alfa
+              <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-0.5" />
+            </Link>
+            <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-ink-faint">
+              Grátis · Sem cartão · Sem compromisso
+            </p>
+          </div>
         </div>
       </section>
 
@@ -142,7 +185,7 @@ export default function LandingPage() {
         <div className="hairline mb-6" />
         <div className="flex items-center justify-between font-mono text-[10px] uppercase tracking-[0.2em] text-ink-faint">
           <span>Kairos · PT-BR</span>
-          <span>V 1.0 · MMXXVI</span>
+          <span>V 1.0 Alfa · MMXXVI</span>
         </div>
       </footer>
     </div>
