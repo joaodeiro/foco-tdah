@@ -64,12 +64,12 @@ export default function JournalPage() {
 
   return (
     <div className="min-h-screen bg-background">
-      <header className="px-6 pt-14 pb-6 max-w-xl mx-auto">
+      <header className="px-6 md:px-12 pt-14 md:pt-20 pb-8 max-w-xl md:max-w-2xl mx-auto">
         <p className="eyebrow capitalize">{formatDisplayDate(todayDate())}</p>
-        <h1 className="font-serif text-5xl leading-none text-ink mt-3">Diário</h1>
+        <h1 className="font-serif text-5xl md:text-6xl leading-none text-ink mt-3">Diário</h1>
       </header>
 
-      <div className="px-6 space-y-10 pb-24 max-w-xl mx-auto">
+      <div className="px-6 md:px-12 space-y-10 md:space-y-14 pb-24 md:pb-20 max-w-xl md:max-w-2xl mx-auto">
 
         {/* Stats */}
         <section className="grid grid-cols-3 gap-3">

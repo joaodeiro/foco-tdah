@@ -55,12 +55,12 @@ export default function TodayPage() {
 
   return (
     <div className="min-h-screen bg-background">
-      <header className="px-6 pt-14 pb-6 max-w-xl mx-auto">
+      <header className="px-6 md:px-12 pt-14 md:pt-20 pb-8 max-w-xl md:max-w-2xl mx-auto">
         <p className="eyebrow capitalize">{formatDisplayDate(today)}</p>
-        <h1 className="font-serif text-5xl leading-none text-ink mt-3">Hoje</h1>
+        <h1 className="font-serif text-5xl md:text-6xl leading-none text-ink mt-3">Hoje</h1>
       </header>
 
-      <div className="px-6 space-y-10 pb-32 max-w-xl mx-auto">
+      <div className="px-6 md:px-12 space-y-10 md:space-y-14 pb-32 md:pb-20 max-w-xl md:max-w-2xl mx-auto">
 
         {/* Energy */}
         <section className="space-y-4">
@@ -191,7 +191,7 @@ export default function TodayPage() {
       <button
         onClick={() => setNewTaskOpen(true)}
         aria-label="Nova tarefa"
-        className="fixed bottom-24 right-6 w-14 h-14 bg-ink hover:bg-terracotta text-background rounded-full shadow-lg shadow-ink/10 flex items-center justify-center transition-all active:scale-90"
+        className="fixed bottom-24 right-6 md:bottom-10 md:right-10 w-14 h-14 bg-ink hover:bg-terracotta text-background rounded-full shadow-lg shadow-ink/10 flex items-center justify-center transition-all active:scale-90"
       >
         <Plus className="w-6 h-6" strokeWidth={2} />
       </button>
