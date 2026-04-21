@@ -1,7 +1,7 @@
 // Service Worker — Foco App PWA
 // Cache strategy: Network-first para API, Cache-first para assets estáticos
 
-const CACHE_NAME = 'foco-v1'
+const CACHE_NAME = 'foco-v2'
 const STATIC_ASSETS = [
   '/',
   '/app',
