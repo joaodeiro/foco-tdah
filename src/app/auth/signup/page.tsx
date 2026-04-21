@@ -89,7 +89,10 @@ export default function SignupPage() {
                 <label htmlFor="email" className="eyebrow block">E-mail</label>
                 <input
                   id="email"
+                  name="email"
                   type="email"
+                  autoComplete="email"
+                  inputMode="email"
                   value={email}
                   onChange={e => setEmail(e.target.value)}
                   placeholder="você@email.com"
@@ -103,7 +106,9 @@ export default function SignupPage() {
                 <label htmlFor="password" className="eyebrow block">Senha</label>
                 <input
                   id="password"
+                  name="password"
                   type="password"
+                  autoComplete="new-password"
                   value={password}
                   onChange={e => setPassword(e.target.value)}
                   placeholder="Mínimo 8 caracteres"
@@ -117,7 +122,9 @@ export default function SignupPage() {
                 <label htmlFor="confirm" className="eyebrow block">Confirmar senha</label>
                 <input
                   id="confirm"
+                  name="confirm"
                   type="password"
+                  autoComplete="new-password"
                   value={confirm}
                   onChange={e => setConfirm(e.target.value)}
                   placeholder="Digite de novo"

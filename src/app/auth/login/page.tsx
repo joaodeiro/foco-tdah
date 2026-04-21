@@ -80,7 +80,10 @@ export default function LoginPage() {
               <label htmlFor="email" className="eyebrow block">E-mail</label>
               <input
                 id="email"
+                name="email"
                 type="email"
+                autoComplete="email"
+                inputMode="email"
                 value={email}
                 onChange={e => setEmail(e.target.value)}
                 placeholder="você@email.com"
@@ -102,7 +105,9 @@ export default function LoginPage() {
               </div>
               <input
                 id="password"
+                name="password"
                 type="password"
+                autoComplete="current-password"
                 value={password}
                 onChange={e => setPassword(e.target.value)}
                 placeholder="••••••••"

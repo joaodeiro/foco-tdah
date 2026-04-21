@@ -81,7 +81,9 @@ export default function ResetPasswordPage() {
               <label htmlFor="password" className="eyebrow block">Nova senha</label>
               <input
                 id="password"
+                name="password"
                 type="password"
+                autoComplete="new-password"
                 value={password}
                 onChange={e => setPassword(e.target.value)}
                 placeholder="Mínimo 8 caracteres"
@@ -96,7 +98,9 @@ export default function ResetPasswordPage() {
               <label htmlFor="confirm" className="eyebrow block">Confirmar</label>
               <input
                 id="confirm"
+                name="confirm"
                 type="password"
+                autoComplete="new-password"
                 value={confirm}
                 onChange={e => setConfirm(e.target.value)}
                 placeholder="Digite de novo"
