@@ -1,31 +1,71 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { useRouter } from 'next/navigation'
+import Link from 'next/link'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { Input } from '@/components/ui/input'
 import { showError, showSuccess, showValidation } from '@/lib/errors'
+
+type Status = 'verifying' | 'ready' | 'invalid'
 
 export default function ResetPasswordPage() {
   const [password, setPassword] = useState('')
   const [confirm, setConfirm] = useState('')
   const [loading, setLoading] = useState(false)
-  const [ready, setReady] = useState(false)
+  const [status, setStatus] = useState<Status>('verifying')
   const router = useRouter()
+  const searchParams = useSearchParams()
 
   useEffect(() => {
-    async function check() {
-      const supabase = createClient()
-      const { data: { session } } = await supabase.auth.getSession()
-      if (!session) {
-        showValidation('Link de recuperação expirado.', 'Peça um novo em "Esqueci minha senha".')
-        router.push('/auth/forgot')
+    const supabase = createClient()
+
+    // Estratégia: aceitar código via query string (PKCE flow) e trocar aqui
+    // no client para preservar a flag de "recovery" da sessão.
+    // Sem isso, updateUser exige a senha atual.
+    async function boot() {
+      const code = searchParams.get('code')
+
+      if (code) {
+        const { error } = await supabase.auth.exchangeCodeForSession(code)
+        if (error) {
+          showError(error)
+          setStatus('invalid')
+          return
+        }
+        setStatus('ready')
         return
       }
-      setReady(true)
+
+      // Sem code → pode ser que o SDK já tenha processado o hash (#)
+      // automaticamente e disparado PASSWORD_RECOVERY. Confirma pela sessão.
+      const { data: { session } } = await supabase.auth.getSession()
+      if (session) {
+        setStatus('ready')
+      } else {
+        setStatus('invalid')
+      }
     }
-    check()
-  }, [router])
+
+    // Também escuta o evento para o caso do SDK processar hash fragment
+    const { data: sub } = supabase.auth.onAuthStateChange((event) => {
+      if (event === 'PASSWORD_RECOVERY') setStatus('ready')
+    })
+
+    boot()
+    return () => sub.subscription.unsubscribe()
+  }, [searchParams])
+
+  useEffect(() => {
+    if (status === 'invalid') {
+      showValidation(
+        'Link de recuperação inválido ou expirado.',
+        'Peça um novo em "Esqueci minha senha".',
+      )
+      const t = setTimeout(() => router.push('/auth/forgot'), 100)
+      return () => clearTimeout(t)
+    }
+  }, [status, router])
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
@@ -57,10 +97,27 @@ export default function ResetPasswordPage() {
     }
   }
 
-  if (!ready) {
+  if (status === 'verifying') {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
-        <p className="text-sm text-ink-muted italic font-serif">Validando…</p>
+        <p className="text-sm text-ink-muted italic font-serif">Validando link…</p>
+      </div>
+    )
+  }
+
+  if (status === 'invalid') {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center px-6">
+        <div className="text-center space-y-4 max-w-sm">
+          <p className="font-serif text-2xl text-ink">Link inválido.</p>
+          <p className="text-sm text-ink-muted">Redirecionando para pedir um novo…</p>
+          <Link
+            href="/auth/forgot"
+            className="inline-block text-sm text-ink underline decoration-hairline underline-offset-4 hover:text-terracotta transition-colors"
+          >
+            Ir agora
+          </Link>
+        </div>
       </div>
     )
   }

@@ -61,6 +61,20 @@ export function translateError(err: unknown): TranslatedError {
     }
   }
 
+  if (raw.includes('current password required') || raw.includes('reauthentication')) {
+    return {
+      message: 'Sua sessão de recuperação expirou.',
+      hint: 'Volte em "Esqueci minha senha" e peça um novo link. Se acabou de clicar no link, tente de novo em outra aba.',
+    }
+  }
+
+  if (raw.includes('aud claim') || (raw.includes('session') && raw.includes('missing'))) {
+    return {
+      message: 'Sua sessão é inválida ou expirou.',
+      hint: 'Saia e entre de novo para renovar.',
+    }
+  }
+
   if (raw.includes('password should be at least')) {
     const match = raw.match(/at least (\d+)/)
     const min = match ? match[1] : '8'
@@ -91,10 +105,24 @@ export function translateError(err: unknown): TranslatedError {
     }
   }
 
-  if (raw.includes('token has expired') || raw.includes('token is invalid') || raw.includes('expired')) {
+  if (
+    raw.includes('token has expired') ||
+    raw.includes('token is invalid') ||
+    raw.includes('link is invalid') ||
+    raw.includes('link has expired') ||
+    raw.includes('otp_expired') ||
+    raw.includes('expired')
+  ) {
     return {
-      message: 'Esse link expirou.',
+      message: 'Esse link expirou ou já foi usado.',
       hint: 'Peça um novo em "Esqueci minha senha".',
+    }
+  }
+
+  if (raw.includes('user not allowed') || raw.includes('user not found')) {
+    return {
+      message: 'Não encontrei uma conta com esse e-mail.',
+      hint: 'Confira se digitou certo, ou crie uma conta nova.',
     }
   }
 
@@ -157,9 +185,13 @@ export function translateError(err: unknown): TranslatedError {
     }
   }
 
-  // ─── Fallback: aproveita a mensagem original se for curta o suficiente ───
+  // ─── Fallback: protege o usuário de jamais ver inglês cru ─────────
+  // Heurística simples: se a mensagem tem palavras comuns em inglês, é quase
+  // certo que é uma mensagem do backend que esqueci de traduzir. Nunca exponha.
   const original = e.message || String(err)
-  if (original && original.length > 0 && original.length < 100 && !raw.includes('undefined')) {
+  const looksEnglish = /\b(the|is|was|are|error|required|invalid|failed|not found|unauthorized|forbidden|when|setting|current|password|missing|expired|token|session|user|email|account)\b/i.test(original)
+
+  if (original && original.length > 0 && original.length < 120 && !looksEnglish && !raw.includes('undefined')) {
     return {
       message: original,
       hint: 'Se continuar, saia e entre de novo.',
