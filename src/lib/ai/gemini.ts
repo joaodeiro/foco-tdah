@@ -126,22 +126,54 @@ Responda APENAS com JSON válido no formato:
   ]
 }`
 
-    const result = await model.generateContent(prompt)
-    const text = result.response.text()
-
-    const jsonMatch = text.match(/\{[\s\S]*\}/)
-    if (!jsonMatch) {
-      return { reply: 'Não consegui entender. Pode tentar de outro jeito?', actions: [] }
-    }
-
     try {
-      const parsed = JSON.parse(jsonMatch[0]) as ChatResponse
-      return {
-        reply: parsed.reply || '',
-        actions: Array.isArray(parsed.actions) ? parsed.actions : [],
+      const result = await model.generateContent(prompt)
+      const text = result.response.text()
+
+      const jsonMatch = text.match(/\{[\s\S]*\}/)
+      if (!jsonMatch) {
+        return { reply: 'Não consegui entender. Tente reformular.', actions: [] }
       }
-    } catch {
-      return { reply: 'Não consegui entender. Pode tentar de outro jeito?', actions: [] }
+
+      try {
+        const parsed = JSON.parse(jsonMatch[0]) as ChatResponse
+        return {
+          reply: parsed.reply || 'Feito.',
+          actions: Array.isArray(parsed.actions) ? parsed.actions : [],
+        }
+      } catch {
+        return { reply: 'A resposta da IA veio em formato inesperado.', actions: [] }
+      }
+    } catch (err: unknown) {
+      const e = err as { message?: string; status?: number }
+      const msg = (e.message || '').toLowerCase()
+
+      if (msg.includes('api key') || msg.includes('api_key') || msg.includes('api_key_invalid') || e.status === 401 || e.status === 403) {
+        return {
+          reply: 'A chave da IA está inválida ou expirada. Peça pra quem configurou atualizar no painel de deploy.',
+          actions: [],
+        }
+      }
+      if (msg.includes('quota') || msg.includes('rate') || e.status === 429) {
+        return {
+          reply: 'Atingi o limite de requisições da IA agora. Espere um minuto e tente de novo.',
+          actions: [],
+        }
+      }
+      if (msg.includes('safety') || msg.includes('blocked') || msg.includes('filter')) {
+        return {
+          reply: 'A IA bloqueou essa mensagem por filtros internos. Tente formular de outra maneira.',
+          actions: [],
+        }
+      }
+      if (msg.includes('model') && msg.includes('not found')) {
+        return {
+          reply: 'O modelo configurado não existe mais. Atualize a variável AI_MODEL.',
+          actions: [],
+        }
+      }
+
+      throw err
     }
   },
 }

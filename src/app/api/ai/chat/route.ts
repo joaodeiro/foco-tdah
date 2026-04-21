@@ -22,8 +22,12 @@ export async function POST(request: NextRequest) {
     const response = await ai.chat(body.message, body.context)
 
     return NextResponse.json(response)
-  } catch (err) {
-    console.error('chat error', err)
-    return NextResponse.json({ error: 'Falha ao processar chat' }, { status: 502 })
+  } catch (err: unknown) {
+    const e = err as Error
+    console.error('[chat] erro:', e.message, e)
+    return NextResponse.json(
+      { error: e.message || 'Falha ao processar chat' },
+      { status: 502 },
+    )
   }
 }

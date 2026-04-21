@@ -106,7 +106,14 @@ export function useChat() {
       })
 
       if (!res.ok) {
-        showError(new Error('Não consegui conversar com Kairos agora.'))
+        let detail = ''
+        try {
+          const errBody = await res.json() as { error?: string }
+          detail = errBody.error || ''
+        } catch {
+          // corpo não era JSON
+        }
+        showError(new Error(detail || `Kairos não respondeu (status ${res.status}).`))
         return
       }
 
