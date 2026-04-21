@@ -79,13 +79,13 @@ export default function TaskCard({
               {task.title}
             </p>
 
-            <div className="flex items-center gap-3 mt-2 text-xs flex-wrap">
-              <span className={cn('inline-flex items-center gap-1', priorityStyles[task.priority])}>
+            <div className="flex items-center gap-3 mt-2.5 font-mono text-[10px] uppercase tracking-[0.12em] flex-wrap">
+              <span className={cn('inline-flex items-center gap-1.5', priorityStyles[task.priority])}>
                 <span className="w-1 h-1 rounded-full bg-current" />
                 {priorityLabels[task.priority]}
               </span>
               {isTopThree && (
-                <span className="text-terracotta italic font-serif">Top 3</span>
+                <span className="text-terracotta">⁂ top 3</span>
               )}
               {task.estimated_minutes && (
                 <span className="text-ink-faint tabular-nums">~{task.estimated_minutes} min</span>
@@ -115,16 +115,17 @@ export default function TaskCard({
 
         {/* Steps progress */}
         {hasSteps && !completed && (
-          <div className="space-y-1.5">
-            <div className="h-[3px] bg-surface-2 rounded-full overflow-hidden">
-              <div
-                className="h-full bg-terracotta rounded-full transition-all duration-500"
-                style={{ width: `${progress}%` }}
-              />
+          <div className="space-y-2">
+            <div className="flex items-center gap-3 font-mono text-[10px] uppercase tracking-[0.15em] text-ink-faint tabular-nums">
+              <span>{String(stepsCompleted).padStart(2, '0')} / {String(task.steps.length).padStart(2, '0')}</span>
+              <span className="flex-1 h-[2px] bg-surface-2 rounded-full overflow-hidden">
+                <span
+                  className="block h-full bg-terracotta rounded-full transition-all duration-500"
+                  style={{ width: `${progress}%` }}
+                />
+              </span>
+              <span>{progress}%</span>
             </div>
-            <p className="text-xs text-ink-faint tabular-nums">
-              {stepsCompleted} de {task.steps.length} passos
-            </p>
           </div>
         )}
 
@@ -137,14 +138,17 @@ export default function TaskCard({
 
         {/* Steps list */}
         {expanded && hasSteps && (
-          <div className="space-y-2.5 pt-3 border-t border-hairline">
-            <p className="eyebrow">Micro-passos</p>
+          <div className="space-y-3 pt-3 border-t border-hairline">
+            <p className="serial">Micro-passos</p>
             {task.steps.map((step, i) => (
               <button
                 key={step.id}
                 onClick={() => onToggleStep(task.id, step.id, !step.completed)}
                 className="w-full flex items-start gap-3 text-left group"
               >
+                <span className="font-mono text-[10px] text-ink-faint tabular-nums mt-1.5 w-5 shrink-0">
+                  {String(i + 1).padStart(2, '0')}
+                </span>
                 <div className="flex items-center justify-center w-4 h-4 shrink-0 mt-1">
                   {step.completed
                     ? (
@@ -159,7 +163,6 @@ export default function TaskCard({
                   'text-[14px] leading-relaxed flex-1',
                   step.completed ? 'line-through text-ink-faint' : 'text-ink-muted',
                 )}>
-                  <span className="text-ink-faint mr-1.5 tabular-nums">{i + 1}.</span>
                   {step.content}
                 </span>
               </button>

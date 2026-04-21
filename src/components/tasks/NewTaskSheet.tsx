@@ -47,7 +47,7 @@ export default function NewTaskSheet({ open, onClose, onCreate }: Props) {
           />
 
           <div className="space-y-2">
-            <p className="eyebrow">Prioridade</p>
+            <p className="serial">Prioridade</p>
             <div className="flex gap-2">
               {priorities.map(p => (
                 <button

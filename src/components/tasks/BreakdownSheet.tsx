@@ -84,10 +84,10 @@ export default function BreakdownSheet({ task, onClose, onSave }: Props) {
 
           {steps.length > 0 && (
             <div className="space-y-3">
-              <p className="eyebrow">Micro-passos</p>
+              <p className="serial">Micro-passos</p>
               {steps.map((step, i) => (
                 <div key={`step-${i}`} className="flex items-start gap-3">
-                  <span className="text-ink-faint text-xs mt-3 tabular-nums shrink-0">{String(i + 1).padStart(2, '0')}</span>
+                  <span className="font-mono text-[10px] text-ink-faint mt-3.5 tabular-nums shrink-0 w-5">{String(i + 1).padStart(2, '0')}</span>
                   <Input
                     name={`step-${i}`}
                     value={step}
@@ -98,7 +98,7 @@ export default function BreakdownSheet({ task, onClose, onSave }: Props) {
               ))}
 
               <div className="flex items-center gap-2 pt-2">
-                <span className="eyebrow">Tempo estimado</span>
+                <span className="serial">Tempo estimado</span>
                 <Input
                   name="estimated_minutes"
                   type="number"

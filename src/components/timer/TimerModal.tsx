@@ -54,8 +54,8 @@ export default function TimerModal({ task, durationMinutes = 25, onClose, onComp
       <DialogContent className="bg-background border-hairline rounded-3xl max-w-sm mx-auto p-0 overflow-hidden">
         <div className="p-8 space-y-7">
           <div className="flex items-center justify-between">
-            <p className="eyebrow">
-              {timer.state === 'finished' ? 'Sessão concluída' : 'Modo foco'}
+            <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-ink-faint">
+              {timer.state === 'finished' ? 'Sessão concluída' : `Sessão · ${durationMinutes} min`}
             </p>
             <button
               onClick={onClose}
@@ -66,7 +66,7 @@ export default function TimerModal({ task, durationMinutes = 25, onClose, onComp
             </button>
           </div>
 
-          <p className="font-serif text-xl text-ink text-center leading-snug">
+          <p className="font-serif text-xl text-ink text-center leading-snug px-4">
             {task.title}
           </p>
 
@@ -93,16 +93,16 @@ export default function TimerModal({ task, durationMinutes = 25, onClose, onComp
               </svg>
               <div className="absolute inset-0 flex flex-col items-center justify-center">
                 <span className={cn(
-                  'font-serif text-5xl tabular-nums leading-none',
+                  'font-mono text-[42px] md:text-5xl tabular-nums leading-none font-medium',
                   timer.state === 'finished' ? 'text-sage' : 'text-ink',
                 )}>
                   {timer.display}
                 </span>
-                <span className="eyebrow mt-3">
-                  {timer.state === 'running' ? 'focando'
-                    : timer.state === 'paused' ? 'pausado'
-                    : timer.state === 'finished' ? 'pronto'
-                    : 'pronto'}
+                <span className="font-mono text-[10px] uppercase tracking-[0.22em] text-ink-faint mt-3">
+                  {timer.state === 'running' ? '● focando'
+                    : timer.state === 'paused' ? '‖ pausado'
+                    : timer.state === 'finished' ? '✓ pronto'
+                    : '○ pronto'}
                 </span>
               </div>
             </div>
@@ -158,10 +158,12 @@ export default function TimerModal({ task, durationMinutes = 25, onClose, onComp
 
           {task.steps.length > 0 && timer.state !== 'finished' && (
             <div className="border-t border-hairline pt-5 space-y-2">
-              <p className="eyebrow">Próximos passos</p>
-              {task.steps.filter(s => !s.completed).slice(0, 3).map(step => (
-                <p key={step.id} className="text-sm text-ink-muted leading-relaxed flex items-start gap-2">
-                  <span className="text-terracotta mt-0.5">›</span>
+              <p className="serial">Próximos passos</p>
+              {task.steps.filter(s => !s.completed).slice(0, 3).map((step, i) => (
+                <p key={step.id} className="text-sm text-ink-muted leading-relaxed flex items-start gap-3">
+                  <span className="font-mono text-[10px] text-ink-faint tabular-nums mt-1 shrink-0 w-5">
+                    {String(i + 1).padStart(2, '0')}
+                  </span>
                   {step.content}
                 </p>
               ))}

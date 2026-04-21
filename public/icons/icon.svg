@@ -1,5 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192">
-  <rect width="192" height="192" rx="40" fill="#f5ecde"/>
-  <circle cx="96" cy="96" r="56" fill="none" stroke="#b84e2f" stroke-width="4"/>
-  <text x="96" y="118" font-family="Georgia, serif" font-size="72" font-style="italic" text-anchor="middle" fill="#1f1410">F</text>
+  <rect width="192" height="192" rx="40" fill="#f5eedd"/>
+  <line x1="46" y1="96" x2="146" y2="96" stroke="#1f1812" stroke-width="2" stroke-linecap="round"/>
+  <line x1="96" y1="46" x2="96" y2="146" stroke="#1f1812" stroke-width="2" stroke-linecap="round"/>
+  <circle cx="96" cy="96" r="11" fill="#b84e2f"/>
+  <text x="96" y="172" font-family="Georgia, serif" font-size="14" font-style="italic" text-anchor="middle" fill="#1f1812" letter-spacing="1">KAIROS</text>
 </svg>

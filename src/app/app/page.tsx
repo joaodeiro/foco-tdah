@@ -55,20 +55,29 @@ export default function TodayPage() {
 
   return (
     <div className="min-h-screen bg-background">
-      <header className="px-6 md:px-12 pt-14 md:pt-20 pb-8 max-w-xl md:max-w-2xl mx-auto">
-        <p className="eyebrow capitalize">{formatDisplayDate(today)}</p>
-        <h1 className="font-serif text-5xl md:text-6xl leading-none text-ink mt-3">Hoje</h1>
+      <header className="px-6 md:px-12 pt-14 md:pt-20 pb-10 max-w-xl md:max-w-2xl mx-auto">
+        <div className="flex items-center gap-3 mb-3">
+          <span className="font-mono text-[11px] tracking-[0.1em] text-ink-faint tabular-nums">I</span>
+          <span className="h-px flex-1 bg-hairline" />
+          <span className="eyebrow capitalize">{formatDisplayDate(today)}</span>
+        </div>
+        <h1 className="font-serif text-5xl md:text-6xl leading-none text-ink">Hoje</h1>
       </header>
 
       <div className="px-6 md:px-12 space-y-10 md:space-y-14 pb-32 md:pb-20 max-w-xl md:max-w-2xl mx-auto">
 
         {/* Energy */}
         <section className="space-y-4">
+          <div className="flex items-center gap-3">
+            <span className="serial">01</span>
+            <span className="flex-1 h-px bg-hairline" />
+            <span className="serial">Nível de energia</span>
+          </div>
           <div className="flex items-baseline justify-between">
             <h2 className="font-serif text-xl text-ink">Como está sua energia?</h2>
             {plan?.energy_level && (
-              <span className="text-sm text-ink-muted italic font-serif">
-                {energyLabels[plan.energy_level]}
+              <span className="font-mono text-[11px] uppercase tracking-[0.15em] text-ink-muted tabular-nums">
+                {plan.energy_level}/5 · {energyLabels[plan.energy_level]}
               </span>
             )}
           </div>
@@ -91,14 +100,19 @@ export default function TodayPage() {
 
         {/* Top 3 */}
         <section className="space-y-4">
+          <div className="flex items-center gap-3">
+            <span className="serial">02</span>
+            <span className="flex-1 h-px bg-hairline" />
+            <span className="serial">Foco do dia · N = 3</span>
+          </div>
           <div className="flex items-baseline justify-between">
             <h2 className="font-serif text-xl text-ink">Top 3 de hoje</h2>
             <button
               onClick={handleSuggestTopThree}
               disabled={suggestingTopThree}
-              className="inline-flex items-center gap-1.5 text-sm text-ink-muted hover:text-terracotta transition-colors disabled:opacity-50"
+              className="inline-flex items-center gap-1.5 font-mono text-[11px] uppercase tracking-[0.15em] text-ink-muted hover:text-terracotta transition-colors disabled:opacity-50"
             >
-              <Sparkles className="w-3.5 h-3.5" strokeWidth={1.6} />
+              <Sparkles className="w-3 h-3" strokeWidth={1.6} />
               {suggestingTopThree ? 'Sugerindo…' : 'Sugerir IA'}
             </button>
           </div>
@@ -133,7 +147,12 @@ export default function TodayPage() {
         {/* Outras */}
         {otherTasks.length > 0 && (
           <section className="space-y-4">
-            <h2 className="eyebrow">Outras tarefas</h2>
+            <div className="flex items-center gap-3">
+              <span className="serial">03</span>
+              <span className="flex-1 h-px bg-hairline" />
+              <span className="serial tabular-nums">N = {otherTasks.length}</span>
+            </div>
+            <h2 className="font-serif text-xl text-ink">Outras tarefas</h2>
             <div className="space-y-3">
               {otherTasks.map(task => (
                 <TaskCard
@@ -154,10 +173,12 @@ export default function TodayPage() {
         {/* Concluídas */}
         {completedTasks.length > 0 && (
           <section className="space-y-4">
-            <div className="flex items-baseline justify-between">
-              <h2 className="eyebrow">Concluídas</h2>
-              <span className="text-xs text-ink-faint tabular-nums">{completedTasks.length}</span>
+            <div className="flex items-center gap-3">
+              <span className="serial">04</span>
+              <span className="flex-1 h-px bg-hairline" />
+              <span className="serial tabular-nums">{completedTasks.length} concluídas</span>
             </div>
+            <h2 className="font-serif text-xl text-ink">Concluídas</h2>
             <div className="space-y-3">
               {completedTasks.map(task => (
                 <TaskCard

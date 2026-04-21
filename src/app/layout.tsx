@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next"
-import { Inter, Instrument_Serif } from "next/font/google"
+import { Inter, Instrument_Serif, JetBrains_Mono } from "next/font/google"
 import { Toaster } from "@/components/ui/sonner"
 import PWARegister from "@/components/layout/PWARegister"
 import "./globals.css"
@@ -18,9 +18,16 @@ const instrumentSerif = Instrument_Serif({
   display: "swap",
 })
 
+const jetbrainsMono = JetBrains_Mono({
+  variable: "--font-mono",
+  subsets: ["latin"],
+  weight: ["400", "500", "600"],
+  display: "swap",
+})
+
 export const metadata: Metadata = {
-  title: "Foco — Produtividade para TDAH",
-  description: "Um sistema de produtividade construído para o cérebro TDAH 2e. Sem força de vontade. Com estrutura.",
+  title: "Kairos — Momento certo para agir",
+  description: "Sistema de produtividade para o cérebro TDAH 2e. Kairos, o momento oportuno.",
   manifest: "/manifest.json",
   icons: {
     icon: "/icons/icon.svg",
@@ -29,10 +36,10 @@ export const metadata: Metadata = {
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
-    title: "Foco",
+    title: "Kairos",
   },
   openGraph: {
-    title: "Foco — Produtividade para TDAH",
+    title: "Kairos — Momento certo para agir",
     description: "Sistema de produtividade construído para o cérebro TDAH 2e.",
     type: "website",
     locale: "pt_BR",
@@ -40,7 +47,7 @@ export const metadata: Metadata = {
 }
 
 export const viewport: Viewport = {
-  themeColor: "#f5ecde",
+  themeColor: "#f5eedd",
   width: "device-width",
   initialScale: 1,
 }
@@ -51,7 +58,7 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="pt-BR" className={`${inter.variable} ${instrumentSerif.variable} h-full antialiased`}>
+    <html lang="pt-BR" className={`${inter.variable} ${instrumentSerif.variable} ${jetbrainsMono.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col bg-background text-foreground font-sans">
         {children}
         <Toaster richColors position="top-center" theme="light" />

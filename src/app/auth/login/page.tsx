@@ -69,10 +69,13 @@ export default function LoginPage() {
         <div className="w-full max-w-sm space-y-10">
 
           <div className="text-center space-y-3">
-            <p className="eyebrow">Foco</p>
+            <p className="eyebrow">Kairos</p>
             <h1 className="font-serif text-4xl leading-tight text-ink">
               Bem-vindo de volta.
             </h1>
+            <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-ink-faint">
+              καιρός · momento certo
+            </p>
           </div>
 
           <form onSubmit={handleLogin} className="space-y-4">
@@ -132,8 +135,8 @@ export default function LoginPage() {
         </div>
       </main>
 
-      <footer className="px-6 pb-8 text-center text-xs text-ink-faint italic font-serif">
-        Estrutura externa que funciona com seu cérebro.
+      <footer className="px-6 pb-8 text-center font-mono text-[10px] uppercase tracking-[0.22em] text-ink-faint">
+        Estrutura externa · para seu cérebro
       </footer>
     </div>
   )

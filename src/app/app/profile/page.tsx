@@ -55,9 +55,13 @@ export default function ProfilePage() {
 
   return (
     <div className="min-h-screen bg-background">
-      <header className="px-6 md:px-12 pt-14 md:pt-20 pb-8 max-w-xl md:max-w-2xl mx-auto">
-        <p className="eyebrow">Conta</p>
-        <h1 className="font-serif text-5xl md:text-6xl leading-none text-ink mt-3">Perfil</h1>
+      <header className="px-6 md:px-12 pt-14 md:pt-20 pb-10 max-w-xl md:max-w-2xl mx-auto">
+        <div className="flex items-center gap-3 mb-3">
+          <span className="font-mono text-[11px] tracking-[0.1em] text-ink-faint tabular-nums">IV</span>
+          <span className="h-px flex-1 bg-hairline" />
+          <span className="eyebrow">Conta</span>
+        </div>
+        <h1 className="font-serif text-5xl md:text-6xl leading-none text-ink">Perfil</h1>
       </header>
 
       <div className="px-6 md:px-12 space-y-10 md:space-y-14 pb-24 md:pb-20 max-w-xl md:max-w-2xl mx-auto">

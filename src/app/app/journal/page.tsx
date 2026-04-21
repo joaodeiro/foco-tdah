@@ -64,9 +64,13 @@ export default function JournalPage() {
 
   return (
     <div className="min-h-screen bg-background">
-      <header className="px-6 md:px-12 pt-14 md:pt-20 pb-8 max-w-xl md:max-w-2xl mx-auto">
-        <p className="eyebrow capitalize">{formatDisplayDate(todayDate())}</p>
-        <h1 className="font-serif text-5xl md:text-6xl leading-none text-ink mt-3">Diário</h1>
+      <header className="px-6 md:px-12 pt-14 md:pt-20 pb-10 max-w-xl md:max-w-2xl mx-auto">
+        <div className="flex items-center gap-3 mb-3">
+          <span className="font-mono text-[11px] tracking-[0.1em] text-ink-faint tabular-nums">III</span>
+          <span className="h-px flex-1 bg-hairline" />
+          <span className="eyebrow capitalize">{formatDisplayDate(todayDate())}</span>
+        </div>
+        <h1 className="font-serif text-5xl md:text-6xl leading-none text-ink">Diário</h1>
       </header>
 
       <div className="px-6 md:px-12 space-y-10 md:space-y-14 pb-24 md:pb-20 max-w-xl md:max-w-2xl mx-auto">
@@ -168,11 +172,11 @@ export default function JournalPage() {
 
 function Stat({ icon, value, label }: { icon: React.ReactNode; value: number; label: string }) {
   return (
-    <div className="bg-surface border border-hairline rounded-2xl p-4 space-y-2">
+    <div className="bg-surface border border-hairline rounded-2xl p-5 space-y-3">
       {icon}
       <div>
-        <p className="font-serif text-2xl text-ink tabular-nums leading-none">{value}</p>
-        <p className="text-[11px] text-ink-faint mt-1">{label}</p>
+        <p className="font-mono text-4xl md:text-5xl text-ink tabular-nums leading-none font-medium">{String(value).padStart(2, '0')}</p>
+        <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-ink-faint mt-2">{label}</p>
       </div>
     </div>
   )

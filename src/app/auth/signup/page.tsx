@@ -72,10 +72,13 @@ export default function SignupPage() {
         <div className="w-full max-w-sm space-y-10">
 
           <div className="text-center space-y-3">
-            <p className="eyebrow">Foco</p>
+            <p className="eyebrow">Kairos</p>
             <h1 className="font-serif text-4xl leading-tight text-ink">
               Crie sua conta.
             </h1>
+            <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-ink-faint">
+              καιρός · momento certo
+            </p>
           </div>
 
           {!sent ? (
