@@ -132,32 +132,13 @@
 }
 
 @layer components {
-  .font-serif {
-    font-family: var(--font-serif), ui-serif, Georgia, serif;
-  }
-  .font-sans {
-    font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
-  }
-  .font-mono {
-    font-family: var(--font-mono), ui-monospace, SFMono-Regular, monospace;
-    font-feature-settings: "tnum";
-  }
   .eyebrow {
     @apply text-[10.5px] uppercase tracking-[0.22em] text-ink-faint font-sans font-medium;
   }
   .serial {
-    font-family: var(--font-mono), ui-monospace, SFMono-Regular, monospace;
-    @apply text-[11px] uppercase tracking-[0.12em] text-ink-faint tabular-nums;
+    @apply font-mono text-[11px] uppercase tracking-[0.12em] text-ink-faint tabular-nums;
   }
   .hairline {
     @apply border-t border-hairline;
-  }
-  .tech-rule {
-    @apply flex items-center gap-3 text-ink-faint;
-  }
-  .tech-rule::before,
-  .tech-rule::after {
-    content: '';
-    @apply flex-1 border-t border-hairline;
   }
 }
