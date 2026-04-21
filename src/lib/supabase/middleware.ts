@@ -32,13 +32,16 @@ export async function updateSession(request: NextRequest) {
   const url = request.nextUrl.clone()
   const isAuthPage = url.pathname.startsWith('/auth')
   const isPublic = url.pathname === '/'
+  // /auth/reset needs an active session (password recovery flow),
+  // so logged-in users must stay there instead of being bounced to /app.
+  const isResetPage = url.pathname === '/auth/reset'
 
   if (!user && !isAuthPage && !isPublic) {
     url.pathname = '/auth/login'
     return NextResponse.redirect(url)
   }
 
-  if (user && isAuthPage) {
+  if (user && isAuthPage && !isResetPage) {
     url.pathname = '/app'
     return NextResponse.redirect(url)
   }

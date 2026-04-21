@@ -2,9 +2,9 @@
 
 import { Suspense, useEffect, useState } from 'react'
 import Link from 'next/link'
-import { useSearchParams } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
-import { ArrowLeft, Mail } from 'lucide-react'
+import { ArrowLeft } from 'lucide-react'
 import { toast } from 'sonner'
 
 function LoginErrorToasts() {
@@ -21,8 +21,9 @@ function LoginErrorToasts() {
 
 export default function LoginPage() {
   const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
-  const [sent, setSent] = useState(false)
+  const router = useRouter()
 
   async function handleLogin(e: React.FormEvent) {
     e.preventDefault()
@@ -30,19 +31,19 @@ export default function LoginPage() {
 
     try {
       const supabase = createClient()
-      const { error } = await supabase.auth.signInWithOtp({
-        email,
-        options: {
-          emailRedirectTo: `${window.location.origin}/auth/callback`,
-        },
-      })
+      const { error } = await supabase.auth.signInWithPassword({ email, password })
 
       if (error) {
-        toast.error('Não consegui enviar o link. Confira o e-mail e tente de novo.')
+        if (error.message.toLowerCase().includes('invalid')) {
+          toast.error('E-mail ou senha incorretos.')
+        } else {
+          toast.error('Não consegui fazer login. Tente de novo.')
+        }
         return
       }
 
-      setSent(true)
+      router.push('/app')
+      router.refresh()
     } finally {
       setLoading(false)
     }
@@ -72,64 +73,64 @@ export default function LoginPage() {
             <h1 className="font-serif text-4xl leading-tight text-ink">
               Bem-vindo de volta.
             </h1>
-            <p className="text-[15px] text-ink-muted leading-relaxed">
-              Te mandamos um link. Sem senha.
-            </p>
           </div>
 
-          {!sent ? (
-            <form onSubmit={handleLogin} className="space-y-5">
-              <div className="space-y-2">
-                <label htmlFor="email" className="eyebrow block">
-                  E-mail
-                </label>
-                <input
-                  id="email"
-                  type="email"
-                  value={email}
-                  onChange={e => setEmail(e.target.value)}
-                  placeholder="você@email.com"
-                  required
-                  autoFocus
-                  className="w-full bg-surface border border-hairline rounded-xl px-4 py-3.5 text-base text-ink placeholder:text-ink-faint focus:outline-none focus:border-terracotta focus:ring-2 focus:ring-terracotta/15 transition-all"
-                />
-              </div>
-
-              <button
-                type="submit"
-                disabled={loading || !email}
-                className="w-full bg-ink text-background font-medium rounded-full py-3.5 transition-all hover:bg-terracotta disabled:opacity-50 disabled:hover:bg-ink"
-              >
-                {loading ? 'Enviando…' : 'Enviar link mágico'}
-              </button>
-
-              <p className="text-center text-xs text-ink-faint leading-relaxed">
-                Sem senha. Sem fricção. Só um link no seu e-mail.
-              </p>
-            </form>
-          ) : (
-            <div className="text-center space-y-5 bg-surface border border-hairline rounded-2xl p-8">
-              <Mail className="w-6 h-6 mx-auto text-terracotta" strokeWidth={1.6} />
-              <div className="space-y-2">
-                <p className="font-serif text-2xl text-ink">Link enviado</p>
-                <p className="text-sm text-ink-muted leading-relaxed">
-                  Verifique <span className="text-ink font-medium">{email}</span>
-                  <br />e clique no link para entrar.
-                </p>
-              </div>
-              <button
-                onClick={() => setSent(false)}
-                className="text-sm text-ink-muted underline decoration-hairline underline-offset-4 hover:text-ink transition-colors"
-              >
-                Usar outro e-mail
-              </button>
+          <form onSubmit={handleLogin} className="space-y-4">
+            <div className="space-y-2">
+              <label htmlFor="email" className="eyebrow block">E-mail</label>
+              <input
+                id="email"
+                type="email"
+                value={email}
+                onChange={e => setEmail(e.target.value)}
+                placeholder="você@email.com"
+                required
+                autoFocus
+                className="w-full bg-surface border border-hairline rounded-xl px-4 py-3.5 text-base text-ink placeholder:text-ink-faint focus:outline-none focus:border-terracotta focus:ring-2 focus:ring-terracotta/15 transition-all"
+              />
             </div>
-          )}
+
+            <div className="space-y-2">
+              <div className="flex items-baseline justify-between">
+                <label htmlFor="password" className="eyebrow block">Senha</label>
+                <Link
+                  href="/auth/forgot"
+                  className="text-[11px] text-ink-muted hover:text-ink transition-colors underline decoration-hairline underline-offset-4"
+                >
+                  Esqueci
+                </Link>
+              </div>
+              <input
+                id="password"
+                type="password"
+                value={password}
+                onChange={e => setPassword(e.target.value)}
+                placeholder="••••••••"
+                required
+                className="w-full bg-surface border border-hairline rounded-xl px-4 py-3.5 text-base text-ink placeholder:text-ink-faint focus:outline-none focus:border-terracotta focus:ring-2 focus:ring-terracotta/15 transition-all"
+              />
+            </div>
+
+            <button
+              type="submit"
+              disabled={loading || !email || !password}
+              className="w-full bg-ink text-background font-medium rounded-full py-3.5 transition-all hover:bg-terracotta disabled:opacity-50 disabled:hover:bg-ink"
+            >
+              {loading ? 'Entrando…' : 'Entrar'}
+            </button>
+
+            <p className="text-center text-sm text-ink-muted pt-2">
+              Não tem conta?{' '}
+              <Link href="/auth/signup" className="text-ink hover:text-terracotta transition-colors underline decoration-hairline underline-offset-4">
+                Criar conta
+              </Link>
+            </p>
+          </form>
         </div>
       </main>
 
       <footer className="px-6 pb-8 text-center text-xs text-ink-faint italic font-serif">
-        Senhas geram fricção cognitiva.
+        Estrutura externa que funciona com seu cérebro.
       </footer>
     </div>
   )
