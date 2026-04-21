@@ -21,13 +21,14 @@ export default function ProfilePage() {
       if (!user) return
       setEmail(user.email || '')
 
-      const { data } = await supabase.from('profiles').select('*').eq('id', user.id).single()
+      const { data } = await supabase.from('profiles').select('*').eq('id', user.id).maybeSingle()
       if (data) {
         setName(data.name || '')
         setTimerMinutes(data.preferred_timer_minutes || 25)
       }
     }
     load()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   async function handleSave() {

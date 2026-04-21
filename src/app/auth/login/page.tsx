@@ -1,30 +1,47 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { useSearchParams } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { Brain, Zap } from 'lucide-react'
+import { toast } from 'sonner'
 
 export default function LoginPage() {
   const [email, setEmail] = useState('')
   const [loading, setLoading] = useState(false)
   const [sent, setSent] = useState(false)
+  const searchParams = useSearchParams()
+
+  useEffect(() => {
+    const err = searchParams.get('error')
+    if (err === 'invalid_code') toast.error('Link expirado ou inválido. Tente de novo.')
+    else if (err === 'missing_code') toast.error('Falhou ao validar seu link.')
+  }, [searchParams])
 
   async function handleLogin(e: React.FormEvent) {
     e.preventDefault()
     setLoading(true)
 
-    const supabase = createClient()
-    await supabase.auth.signInWithOtp({
-      email,
-      options: {
-        emailRedirectTo: `${window.location.origin}/auth/callback`,
-      },
-    })
+    try {
+      const supabase = createClient()
+      const { error } = await supabase.auth.signInWithOtp({
+        email,
+        options: {
+          emailRedirectTo: `${window.location.origin}/auth/callback`,
+        },
+      })
 
-    setSent(true)
-    setLoading(false)
+      if (error) {
+        toast.error('Não consegui enviar o link. Confira o e-mail e tente de novo.')
+        return
+      }
+
+      setSent(true)
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (

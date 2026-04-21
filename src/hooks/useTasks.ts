@@ -13,24 +13,27 @@ export function useTasks(date?: string) {
   const targetDate = date || todayDate()
 
   const fetchTasks = useCallback(async () => {
-    const { data: { user } } = await supabase.auth.getUser()
-    if (!user) return
+    try {
+      const { data: { user } } = await supabase.auth.getUser()
+      if (!user) return
 
-    const { data, error } = await supabase
-      .from('tasks')
-      .select(`*, task_steps(*)`)
-      .eq('user_id', user.id)
-      .eq('date', targetDate)
-      .order('created_at', { ascending: true })
+      const { data, error } = await supabase
+        .from('tasks')
+        .select(`*, task_steps(*)`)
+        .eq('user_id', user.id)
+        .eq('date', targetDate)
+        .order('created_at', { ascending: true })
 
-    if (error) { console.error(error); return }
+      if (error) { console.error(error); return }
 
-    const mapped = (data || []).map(t => ({
-      ...t,
-      steps: (t.task_steps || []).sort((a: TaskStep, b: TaskStep) => a.order - b.order),
-    }))
-    setTasks(mapped)
-    setLoading(false)
+      const mapped = (data || []).map(t => ({
+        ...t,
+        steps: (t.task_steps || []).sort((a: TaskStep, b: TaskStep) => a.order - b.order),
+      }))
+      setTasks(mapped)
+    } finally {
+      setLoading(false)
+    }
   }, [targetDate])
 
   useEffect(() => { fetchTasks() }, [fetchTasks])
@@ -52,23 +55,24 @@ export function useTasks(date?: string) {
     return task
   }
 
-  async function updateTask(id: string, updates: Partial<Task>) {
+  async function updateTask(id: string, updates: Partial<Task>): Promise<boolean> {
     const { error } = await supabase
       .from('tasks')
       .update({ ...updates, updated_at: new Date().toISOString() })
       .eq('id', id)
 
-    if (error) { toast.error('Erro ao atualizar'); return }
+    if (error) { toast.error('Erro ao atualizar'); return false }
 
     setTasks(prev => prev.map(t => t.id === id ? { ...t, ...updates } : t))
+    return true
   }
 
   async function completeTask(id: string) {
-    await updateTask(id, {
+    const ok = await updateTask(id, {
       status: 'completed',
       completed_at: new Date().toISOString(),
     })
-    toast.success('Tarefa concluída! 🎉')
+    if (ok) toast.success('Tarefa concluída! 🎉')
   }
 
   async function deleteTask(id: string) {
@@ -78,23 +82,33 @@ export function useTasks(date?: string) {
   }
 
   async function saveSteps(taskId: string, stepContents: string[], estimatedMinutes: number) {
-    // Deletar steps anteriores
-    await supabase.from('task_steps').delete().eq('task_id', taskId)
-
-    const steps = stepContents.map((content, i) => ({
+    const newSteps = stepContents.map((content, i) => ({
       task_id: taskId,
       content,
       order: i,
       completed: false,
     }))
 
-    const { data, error } = await supabase.from('task_steps').insert(steps).select()
-    if (error) { toast.error('Erro ao salvar passos'); return }
+    const { data: inserted, error: insertError } = await supabase
+      .from('task_steps')
+      .insert(newSteps)
+      .select()
+
+    if (insertError) { toast.error('Erro ao salvar passos'); return }
+
+    const newIds = (inserted || []).map(s => s.id)
+    const { error: deleteError } = await supabase
+      .from('task_steps')
+      .delete()
+      .eq('task_id', taskId)
+      .not('id', 'in', `(${newIds.join(',')})`)
+
+    if (deleteError) console.error('Falha ao limpar passos antigos', deleteError)
 
     await updateTask(taskId, { estimated_minutes: estimatedMinutes })
 
     setTasks(prev => prev.map(t =>
-      t.id === taskId ? { ...t, steps: data || [], estimated_minutes: estimatedMinutes } : t
+      t.id === taskId ? { ...t, steps: inserted || [], estimated_minutes: estimatedMinutes } : t
     ))
   }
 
@@ -114,8 +128,8 @@ export function useTasks(date?: string) {
   }
 
   async function saveContextBookmark(taskId: string, bookmark: string) {
-    await updateTask(taskId, { context_bookmark: bookmark, status: 'paused' })
-    toast.success('Contexto salvo! Pode ir 👋')
+    const ok = await updateTask(taskId, { context_bookmark: bookmark, status: 'paused' })
+    if (ok) toast.success('Contexto salvo! Pode ir 👋')
   }
 
   return {

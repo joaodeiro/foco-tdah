@@ -11,10 +11,15 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Não autorizado' }, { status: 401 })
   }
 
-  const body = await request.json() as { tasks: Task[]; energyLevel: number }
+  try {
+    const body = await request.json() as { tasks: Task[]; energyLevel: number }
 
-  const ai = await getAIProvider()
-  const ids = await ai.suggestTopThree(body.tasks, body.energyLevel)
+    const ai = await getAIProvider()
+    const ids = await ai.suggestTopThree(body.tasks, body.energyLevel)
 
-  return NextResponse.json({ ids })
+    return NextResponse.json({ ids })
+  } catch (err) {
+    console.error('suggest error', err)
+    return NextResponse.json({ error: 'Falha ao processar com IA' }, { status: 502 })
+  }
 }

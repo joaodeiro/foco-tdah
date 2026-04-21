@@ -197,7 +197,8 @@ export default function TodayPage() {
       {/* FAB */}
       <button
         onClick={() => setNewTaskOpen(true)}
-        className="fixed bottom-24 right-5 w-15 h-15 bg-violet-600 hover:bg-violet-500 rounded-full shadow-xl shadow-violet-500/30 flex items-center justify-center transition-all active:scale-90 w-[60px] h-[60px]"
+        aria-label="Nova tarefa"
+        className="fixed bottom-24 right-5 w-[60px] h-[60px] bg-violet-600 hover:bg-violet-500 rounded-full shadow-xl shadow-violet-500/30 flex items-center justify-center transition-all active:scale-90"
       >
         <Plus className="w-7 h-7 text-white" strokeWidth={2.5} />
       </button>

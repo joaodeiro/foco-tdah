@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { todayDate } from '@/lib/utils'
 import type { JournalEntry, Streak } from '@/types'
@@ -15,23 +15,26 @@ export function useJournal() {
 
   useEffect(() => {
     async function fetch() {
-      const { data: { user } } = await supabase.auth.getUser()
-      if (!user) return
+      try {
+        const { data: { user } } = await supabase.auth.getUser()
+        if (!user) return
 
-      const [{ data: entryData }, { data: streakData }] = await Promise.all([
-        supabase.from('journal_entries').select('*').eq('user_id', user.id).eq('date', today).single(),
-        supabase.from('streaks').select('*').eq('user_id', user.id).single(),
-      ])
+        const [{ data: entryData }, { data: streakData }] = await Promise.all([
+          supabase.from('journal_entries').select('*').eq('user_id', user.id).eq('date', today).maybeSingle(),
+          supabase.from('streaks').select('*').eq('user_id', user.id).maybeSingle(),
+        ])
 
-      setEntry(entryData)
-      if (streakData) {
-        setStreak({
-          current: streakData.current_streak,
-          longest: streakData.longest_streak,
-          last_active_date: streakData.last_active_date,
-        })
+        setEntry(entryData)
+        if (streakData) {
+          setStreak({
+            current: streakData.current_streak,
+            longest: streakData.longest_streak,
+            last_active_date: streakData.last_active_date,
+          })
+        }
+      } finally {
+        setLoading(false)
       }
-      setLoading(false)
     }
     fetch()
   }, [today])
@@ -55,7 +58,6 @@ export function useJournal() {
     if (error) { toast.error('Erro ao salvar'); return }
     setEntry(data)
 
-    // Atualizar streak
     await updateStreak(user.id)
     toast.success('Diário salvo! ✨')
   }

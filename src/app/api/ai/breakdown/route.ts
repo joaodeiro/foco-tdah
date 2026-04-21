@@ -10,14 +10,19 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Não autorizado' }, { status: 401 })
   }
 
-  const body = await request.json() as { title: string; description?: string }
+  try {
+    const body = await request.json() as { title: string; description?: string }
 
-  if (!body.title?.trim()) {
-    return NextResponse.json({ error: 'Título obrigatório' }, { status: 400 })
+    if (!body.title?.trim()) {
+      return NextResponse.json({ error: 'Título obrigatório' }, { status: 400 })
+    }
+
+    const ai = await getAIProvider()
+    const result = await ai.breakdownTask(body.title, body.description)
+
+    return NextResponse.json(result)
+  } catch (err) {
+    console.error('breakdown error', err)
+    return NextResponse.json({ error: 'Falha ao processar com IA' }, { status: 502 })
   }
-
-  const ai = await getAIProvider()
-  const result = await ai.breakdownTask(body.title, body.description)
-
-  return NextResponse.json(result)
 }

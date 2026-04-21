@@ -52,19 +52,6 @@ export interface DayPlan {
   updated_at: string
 }
 
-// ─── Session ─────────────────────────────────────────────────────────────────
-
-export interface Session {
-  id: string
-  user_id: string
-  task_id: string
-  started_at: string
-  ended_at: string | null
-  duration_seconds: number | null
-  interrupted: boolean
-  created_at: string
-}
-
 // ─── Journal ─────────────────────────────────────────────────────────────────
 
 export type MoodLevel = 1 | 2 | 3 | 4 | 5

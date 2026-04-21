@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { todayDate } from '@/lib/utils'
 import type { DayPlan, Task } from '@/types'
+import { toast } from 'sonner'
 
 export function useDayPlan() {
   const [plan, setPlan] = useState<DayPlan | null>(null)
@@ -13,18 +14,21 @@ export function useDayPlan() {
 
   useEffect(() => {
     async function fetch() {
-      const { data: { user } } = await supabase.auth.getUser()
-      if (!user) return
+      try {
+        const { data: { user } } = await supabase.auth.getUser()
+        if (!user) return
 
-      const { data } = await supabase
-        .from('day_plans')
-        .select('*')
-        .eq('user_id', user.id)
-        .eq('date', today)
-        .single()
+        const { data } = await supabase
+          .from('day_plans')
+          .select('*')
+          .eq('user_id', user.id)
+          .eq('date', today)
+          .maybeSingle()
 
-      setPlan(data)
-      setLoading(false)
+        setPlan(data)
+      } finally {
+        setLoading(false)
+      }
     }
     fetch()
   }, [today])
@@ -57,8 +61,21 @@ export function useDayPlan() {
       body: JSON.stringify({ tasks, energyLevel: plan.energy_level }),
     })
 
-    const { ids } = await res.json()
-    await setTopThree(ids)
+    if (!res.ok) {
+      toast.error('Não consegui sugerir agora. Tente de novo.')
+      return
+    }
+
+    const { ids } = await res.json() as { ids: string[] }
+    const validIds = new Set(tasks.map(t => t.id))
+    const safeIds = (ids || []).filter(id => validIds.has(id)).slice(0, 3)
+
+    if (safeIds.length === 0) {
+      toast.info('A IA não sugeriu nenhuma tarefa válida.')
+      return
+    }
+
+    await setTopThree(safeIds)
   }
 
   async function setTopThree(ids: string[]) {

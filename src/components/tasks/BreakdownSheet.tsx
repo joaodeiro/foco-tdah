@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet'
 import { Button } from '@/components/ui/button'
 import { Sparkles, Loader2 } from 'lucide-react'
+import { toast } from 'sonner'
 import type { Task } from '@/types'
 
 interface Props {
@@ -28,16 +29,25 @@ export default function BreakdownSheet({ task, onClose, onSave }: Props) {
     if (!task) return
     setLoading(true)
 
-    const res = await fetch('/api/ai/breakdown', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ title: task.title, description: task.description }),
-    })
+    try {
+      const res = await fetch('/api/ai/breakdown', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ title: task.title, description: task.description }),
+      })
 
-    const data = await res.json()
-    setSteps(data.steps || [])
-    setEstimatedMinutes(data.estimated_minutes || 25)
-    setLoading(false)
+      if (!res.ok) {
+        toast.error('Não consegui quebrar a tarefa agora. Tente de novo.')
+        return
+      }
+
+      const data = await res.json()
+      setSteps(Array.isArray(data.steps) ? data.steps : [])
+      const minutes = Number(data.estimated_minutes)
+      setEstimatedMinutes(Number.isFinite(minutes) && minutes > 0 ? minutes : 25)
+    } finally {
+      setLoading(false)
+    }
   }
 
   function handleSave() {
@@ -77,7 +87,7 @@ export default function BreakdownSheet({ task, onClose, onSave }: Props) {
             <div className="space-y-2">
               <p className="text-xs text-zinc-500">Micro-passos</p>
               {steps.map((step, i) => (
-                <div key={i} className="flex items-start gap-2">
+                <div key={`step-${i}`} className="flex items-start gap-2">
                   <span className="text-violet-500 text-xs mt-2.5 shrink-0">{i + 1}.</span>
                   <input
                     value={step}
@@ -91,8 +101,12 @@ export default function BreakdownSheet({ task, onClose, onSave }: Props) {
                 <span className="text-xs text-zinc-500">Tempo estimado:</span>
                 <input
                   type="number"
+                  min={1}
                   value={estimatedMinutes}
-                  onChange={e => setEstimatedMinutes(Number(e.target.value))}
+                  onChange={e => {
+                    const n = Number(e.target.value)
+                    setEstimatedMinutes(Number.isFinite(n) && n > 0 ? n : 1)
+                  }}
                   className="w-16 bg-zinc-900 border border-zinc-800 rounded-lg px-2 py-1 text-sm text-white text-center focus:outline-none focus:border-violet-500"
                 />
                 <span className="text-xs text-zinc-500">min</span>

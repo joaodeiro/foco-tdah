@@ -22,6 +22,7 @@ export default function JournalPage() {
   const [reflection, setReflection] = useState('')
   const [newWin, setNewWin] = useState('')
   const [wins, setWins] = useState<string[]>([])
+  const [winsInitialized, setWinsInitialized] = useState(false)
 
   const completedToday = tasks.filter(t => t.status === 'completed')
 
@@ -30,15 +31,17 @@ export default function JournalPage() {
       setMoodEnd(entry.mood_end as MoodLevel | null)
       setReflection(entry.reflection || '')
       setWins(entry.wins || [])
+      setWinsInitialized(true)
     }
   }, [entry])
 
-  // Auto-populate wins from completed tasks
+  // Auto-populate wins from completed tasks on first load only
   useEffect(() => {
-    if (completedToday.length > 0 && wins.length === 0) {
+    if (!winsInitialized && !entry && completedToday.length > 0) {
       setWins(completedToday.map(t => t.title))
+      setWinsInitialized(true)
     }
-  }, [completedToday.length])
+  }, [completedToday.length, entry, winsInitialized])
 
   function addWin() {
     if (!newWin.trim()) return
@@ -108,10 +111,14 @@ export default function JournalPage() {
 
           <div className="space-y-2">
             {wins.map((win, i) => (
-              <div key={i} className="flex items-center gap-2 bg-zinc-800 rounded-lg px-3 py-2">
+              <div key={`${i}-${win}`} className="flex items-center gap-2 bg-zinc-800 rounded-lg px-3 py-2">
                 <span className="text-green-400 text-sm">✓</span>
                 <span className="flex-1 text-sm text-zinc-200">{win}</span>
-                <button onClick={() => removeWin(i)} className="text-zinc-600 hover:text-zinc-400">
+                <button
+                  onClick={() => removeWin(i)}
+                  className="text-zinc-600 hover:text-zinc-400"
+                  aria-label="Remover conquista"
+                >
                   <X className="w-3 h-3" />
                 </button>
               </div>

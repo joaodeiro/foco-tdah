@@ -69,18 +69,6 @@ create table day_plans (
   unique (user_id, date)
 );
 
--- ─── Sessions (rastreamento de execução) ─────────────────────────────────────
-create table sessions (
-  id uuid default uuid_generate_v4() primary key,
-  user_id uuid references profiles(id) on delete cascade not null,
-  task_id uuid references tasks(id) on delete cascade not null,
-  started_at timestamptz default now(),
-  ended_at timestamptz,
-  duration_seconds int,
-  interrupted boolean default false,
-  created_at timestamptz default now()
-);
-
 -- ─── Journal ──────────────────────────────────────────────────────────────────
 create table journal_entries (
   id uuid default uuid_generate_v4() primary key,
@@ -113,7 +101,6 @@ alter table profiles enable row level security;
 alter table tasks enable row level security;
 alter table task_steps enable row level security;
 alter table day_plans enable row level security;
-alter table sessions enable row level security;
 alter table journal_entries enable row level security;
 alter table streaks enable row level security;
 
@@ -124,7 +111,6 @@ create policy "users_own_steps" on task_steps for all using (
   task_id in (select id from tasks where user_id = auth.uid())
 );
 create policy "users_own_day_plans" on day_plans for all using (auth.uid() = user_id);
-create policy "users_own_sessions" on sessions for all using (auth.uid() = user_id);
 create policy "users_own_journal" on journal_entries for all using (auth.uid() = user_id);
 create policy "users_own_streaks" on streaks for all using (auth.uid() = user_id);
 
@@ -133,5 +119,4 @@ create index tasks_user_date on tasks(user_id, date);
 create index tasks_status on tasks(user_id, status);
 create index task_steps_task_id on task_steps(task_id, "order");
 create index day_plans_user_date on day_plans(user_id, date);
-create index sessions_user_task on sessions(user_id, task_id);
 create index journal_user_date on journal_entries(user_id, date);

@@ -16,24 +16,33 @@ interface Props {
 
 const CIRCUMFERENCE = 2 * Math.PI * 52 // radius 52
 
+async function ensureNotificationPermission(): Promise<boolean> {
+  if (typeof window === 'undefined' || !('Notification' in window)) return false
+  if (Notification.permission === 'granted') return true
+  if (Notification.permission === 'denied') return false
+  const result = await Notification.requestPermission()
+  return result === 'granted'
+}
+
 export default function TimerModal({ task, durationMinutes = 25, onClose, onComplete }: Props) {
   const timer = useTimer(durationMinutes)
 
   // Auto-start when task is set
   useEffect(() => {
-    if (task) {
-      timer.reset()
-      setTimeout(() => timer.start(), 100)
-    }
+    if (!task) return
+    timer.reset()
+    ensureNotificationPermission()
+    const id = setTimeout(() => timer.start(), 100)
+    return () => clearTimeout(id)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [task?.id])
 
   // Notify when finished
   useEffect(() => {
-    if (timer.state === 'finished') {
-      if ('Notification' in window && Notification.permission === 'granted') {
-        new Notification('Foco! ⏱️', { body: `Sessão encerrada: ${task?.title}` })
-      }
+    if (timer.state === 'finished' && typeof window !== 'undefined' && 'Notification' in window && Notification.permission === 'granted') {
+      new Notification('Foco! ⏱️', { body: `Sessão encerrada: ${task?.title ?? ''}` })
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [timer.state])
 
   if (!task) return null
@@ -52,6 +61,7 @@ export default function TimerModal({ task, durationMinutes = 25, onClose, onComp
             <button
               onClick={onClose}
               className="text-zinc-600 hover:text-zinc-400 transition-colors"
+              aria-label="Fechar"
             >
               <X className="w-4 h-4" />
             </button>
@@ -107,6 +117,7 @@ export default function TimerModal({ task, durationMinutes = 25, onClose, onComp
               <button
                 onClick={timer.reset}
                 className="w-10 h-10 rounded-full bg-zinc-900 border border-zinc-800 flex items-center justify-center text-zinc-500 hover:text-zinc-300 transition-colors"
+                aria-label="Reiniciar timer"
               >
                 <RotateCcw className="w-4 h-4" />
               </button>
@@ -114,6 +125,7 @@ export default function TimerModal({ task, durationMinutes = 25, onClose, onComp
               <button
                 onClick={timer.state === 'running' ? timer.pause : timer.resume}
                 className="w-16 h-16 rounded-full bg-violet-600 hover:bg-violet-500 flex items-center justify-center text-white transition-colors shadow-lg shadow-violet-500/25"
+                aria-label={timer.state === 'running' ? 'Pausar' : 'Iniciar'}
               >
                 {timer.state === 'running'
                   ? <Pause className="w-6 h-6" fill="currentColor" />
@@ -124,6 +136,7 @@ export default function TimerModal({ task, durationMinutes = 25, onClose, onComp
               <button
                 onClick={() => onComplete(task.id)}
                 className="w-10 h-10 rounded-full bg-zinc-900 border border-zinc-800 flex items-center justify-center text-zinc-500 hover:text-green-400 transition-colors"
+                aria-label="Marcar como concluída"
               >
                 <CheckCircle2 className="w-4 h-4" />
               </button>

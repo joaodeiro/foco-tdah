@@ -14,6 +14,10 @@ export const metadata: Metadata = {
   title: "Foco — Produtividade para TDAH",
   description: "Sistema de produtividade construído para o cérebro TDAH 2e. Sem força de vontade. Com estrutura.",
   manifest: "/manifest.json",
+  icons: {
+    icon: "/icons/icon.svg",
+    apple: "/icons/icon.svg",
+  },
   appleWebApp: {
     capable: true,
     statusBarStyle: "black-translucent",
@@ -41,15 +45,13 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="pt-BR" className={`${nunito.variable} h-full antialiased`}>
+    <html lang="pt-BR" className={`dark ${nunito.variable} h-full antialiased`}>
       <head>
-        <link rel="apple-touch-icon" href="/icons/icon-192.png" />
-        <meta name="apple-mobile-web-app-capable" content="yes" />
-        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+        <link rel="apple-touch-icon" href="/icons/icon.svg" />
       </head>
-      <body className="min-h-full flex flex-col bg-[#0f0f0f] text-white">
+      <body className="min-h-full flex flex-col bg-background text-foreground">
         {children}
-        <Toaster richColors position="top-center" />
+        <Toaster richColors position="top-center" theme="dark" />
         <PWARegister />
       </body>
     </html>
