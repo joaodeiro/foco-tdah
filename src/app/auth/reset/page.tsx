@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { Suspense, useEffect, useState } from 'react'
 import Link from 'next/link'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
@@ -10,6 +10,22 @@ import { showError, showSuccess, showValidation } from '@/lib/errors'
 type Status = 'verifying' | 'ready' | 'invalid'
 
 export default function ResetPasswordPage() {
+  return (
+    <Suspense fallback={<ValidatingScreen />}>
+      <ResetPasswordInner />
+    </Suspense>
+  )
+}
+
+function ValidatingScreen() {
+  return (
+    <div className="min-h-screen bg-background flex items-center justify-center">
+      <p className="text-sm text-ink-muted italic font-serif">Validando link…</p>
+    </div>
+  )
+}
+
+function ResetPasswordInner() {
   const [password, setPassword] = useState('')
   const [confirm, setConfirm] = useState('')
   const [loading, setLoading] = useState(false)
@@ -20,9 +36,6 @@ export default function ResetPasswordPage() {
   useEffect(() => {
     const supabase = createClient()
 
-    // Estratégia: aceitar código via query string (PKCE flow) e trocar aqui
-    // no client para preservar a flag de "recovery" da sessão.
-    // Sem isso, updateUser exige a senha atual.
     async function boot() {
       const code = searchParams.get('code')
 
@@ -37,8 +50,6 @@ export default function ResetPasswordPage() {
         return
       }
 
-      // Sem code → pode ser que o SDK já tenha processado o hash (#)
-      // automaticamente e disparado PASSWORD_RECOVERY. Confirma pela sessão.
       const { data: { session } } = await supabase.auth.getSession()
       if (session) {
         setStatus('ready')
@@ -47,7 +58,6 @@ export default function ResetPasswordPage() {
       }
     }
 
-    // Também escuta o evento para o caso do SDK processar hash fragment
     const { data: sub } = supabase.auth.onAuthStateChange((event) => {
       if (event === 'PASSWORD_RECOVERY') setStatus('ready')
     })
@@ -97,13 +107,7 @@ export default function ResetPasswordPage() {
     }
   }
 
-  if (status === 'verifying') {
-    return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <p className="text-sm text-ink-muted italic font-serif">Validando link…</p>
-      </div>
-    )
-  }
+  if (status === 'verifying') return <ValidatingScreen />
 
   if (status === 'invalid') {
     return (
