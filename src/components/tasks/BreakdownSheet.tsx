@@ -88,6 +88,10 @@ export default function BreakdownSheet({ task, onClose, onSave }: Props) {
                 <div key={`step-${i}`} className="flex items-start gap-3">
                   <span className="text-ink-faint text-xs mt-3 tabular-nums shrink-0">{String(i + 1).padStart(2, '0')}</span>
                   <input
+                    name={`step-${i}`}
+                    type="text"
+                    autoComplete="off"
+                    autoCorrect="off"
                     value={step}
                     onChange={e => setSteps(prev => prev.map((s, j) => j === i ? e.target.value : s))}
                     className="flex-1 bg-surface border border-hairline rounded-xl px-3 py-2.5 text-sm text-ink focus:outline-none focus:border-terracotta/50"
@@ -98,7 +102,10 @@ export default function BreakdownSheet({ task, onClose, onSave }: Props) {
               <div className="flex items-center gap-2 pt-2">
                 <span className="eyebrow">Tempo estimado</span>
                 <input
+                  name="estimated_minutes"
                   type="number"
+                  inputMode="numeric"
+                  autoComplete="off"
                   min={1}
                   value={estimatedMinutes}
                   onChange={e => {

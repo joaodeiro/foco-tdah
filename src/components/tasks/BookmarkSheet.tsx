@@ -39,6 +39,8 @@ export default function BookmarkSheet({ task, onClose, onSave }: Props) {
           </p>
 
           <textarea
+            name="bookmark"
+            autoComplete="off"
             autoFocus
             value={text}
             onChange={e => setText(e.target.value)}

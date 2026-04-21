@@ -69,6 +69,9 @@ export default function ProfilePage() {
             <label htmlFor="name" className="eyebrow block">Como quer ser chamado</label>
             <input
               id="name"
+              name="name"
+              type="text"
+              autoComplete="given-name"
               value={name}
               onChange={e => setName(e.target.value)}
               placeholder="Seu nome"

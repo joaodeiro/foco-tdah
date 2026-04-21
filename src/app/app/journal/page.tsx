@@ -103,6 +103,10 @@ export default function JournalPage() {
 
           <div className="flex gap-2">
             <input
+              name="newWin"
+              type="text"
+              autoComplete="off"
+              autoCorrect="off"
               value={newWin}
               onChange={e => setNewWin(e.target.value)}
               onKeyDown={e => e.key === 'Enter' && addWin()}
@@ -144,6 +148,8 @@ export default function JournalPage() {
         <section className="space-y-3">
           <h2 className="font-serif text-xl text-ink">Reflexão</h2>
           <textarea
+            name="reflection"
+            autoComplete="off"
             value={reflection}
             onChange={e => setReflection(e.target.value)}
             placeholder="O que funcionou hoje? O que poderia ser diferente?"

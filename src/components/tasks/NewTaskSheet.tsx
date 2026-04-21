@@ -38,6 +38,10 @@ export default function NewTaskSheet({ open, onClose, onCreate }: Props) {
 
         <form onSubmit={handleSubmit} className="space-y-5 px-4 pb-6">
           <input
+            name="title"
+            type="text"
+            autoComplete="off"
+            autoCorrect="off"
             autoFocus
             value={title}
             onChange={e => setTitle(e.target.value)}
