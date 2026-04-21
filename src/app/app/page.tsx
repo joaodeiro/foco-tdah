@@ -1,11 +1,10 @@
 'use client'
 
 import { useState } from 'react'
-import { Plus, Sparkles } from 'lucide-react'
+import { Sparkles } from 'lucide-react'
 import { useTasks } from '@/hooks/useTasks'
 import { useDayPlan } from '@/hooks/useDayPlan'
 import TaskCard from '@/components/tasks/TaskCard'
-import NewTaskSheet from '@/components/tasks/NewTaskSheet'
 import BreakdownSheet from '@/components/tasks/BreakdownSheet'
 import BookmarkSheet from '@/components/tasks/BookmarkSheet'
 import TimerModal from '@/components/timer/TimerModal'
@@ -17,10 +16,9 @@ const energyLabels = ['', 'Muito baixa', 'Baixa', 'Média', 'Boa', 'Ótima']
 const energyEmojis = ['', '😴', '😕', '😐', '😊', '⚡']
 
 export default function TodayPage() {
-  const { tasks, loading, createTask, completeTask, deleteTask, saveSteps, toggleStep, saveContextBookmark } = useTasks()
+  const { tasks, loading, completeTask, deleteTask, saveSteps, toggleStep, saveContextBookmark } = useTasks()
   const { plan, setEnergyLevel, suggestTopThree } = useDayPlan()
 
-  const [newTaskOpen, setNewTaskOpen] = useState(false)
   const [breakdownTask, setBreakdownTask] = useState<Task | null>(null)
   const [bookmarkTask, setBookmarkTask] = useState<Task | null>(null)
   const [timerTask, setTimerTask] = useState<Task | null>(null)
@@ -32,10 +30,6 @@ export default function TodayPage() {
   const completedTasks = tasks.filter(t => t.status === 'completed')
   const topThree = tasks.filter(t => topThreeIds.includes(t.id))
   const otherTasks = pendingTasks.filter(t => !topThreeIds.includes(t.id))
-
-  async function handleCreate(title: string, priority: Task['priority']) {
-    await createTask(title, priority)
-  }
 
   async function handleSuggestTopThree() {
     if (!plan?.energy_level) {
@@ -208,21 +202,7 @@ export default function TodayPage() {
         )}
       </div>
 
-      {/* FAB */}
-      <button
-        onClick={() => setNewTaskOpen(true)}
-        aria-label="Nova tarefa"
-        className="fixed bottom-24 right-6 md:bottom-10 md:right-10 w-14 h-14 bg-ink hover:bg-terracotta text-background rounded-full shadow-lg shadow-ink/10 flex items-center justify-center transition-all active:scale-90"
-      >
-        <Plus className="w-6 h-6" strokeWidth={2} />
-      </button>
-
       {/* Sheets & Modals */}
-      <NewTaskSheet
-        open={newTaskOpen}
-        onClose={() => setNewTaskOpen(false)}
-        onCreate={handleCreate}
-      />
       <BreakdownSheet
         task={breakdownTask}
         onClose={() => setBreakdownTask(null)}

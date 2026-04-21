@@ -86,7 +86,37 @@ export interface AIBreakdownResult {
   estimated_minutes: number
 }
 
+// Ações estruturadas que o chat pode executar no cliente.
+export type ChatAction =
+  | { type: 'create_task'; payload: { title: string; priority?: TaskPriority; description?: string } }
+  | { type: 'breakdown_task'; payload: { title_or_id: string } }
+  | { type: 'suggest_top_three'; payload: Record<string, never> }
+  | { type: 'complete_task'; payload: { title_or_id: string } }
+  | { type: 'save_context'; payload: { title_or_id: string; bookmark: string } }
+  | { type: 'set_energy'; payload: { level: 1 | 2 | 3 | 4 | 5 } }
+  | { type: 'reply_only'; payload: Record<string, never> }
+
+export interface ChatContext {
+  pendingTasks: Array<Pick<Task, 'id' | 'title' | 'priority' | 'status'>>
+  energyLevel: number | null
+  todayDate: string
+}
+
+export interface ChatResponse {
+  reply: string
+  actions: ChatAction[]
+}
+
+export interface ChatMessage {
+  id: string
+  role: 'user' | 'assistant'
+  content: string
+  actions?: ChatAction[]
+  createdAt: string
+}
+
 export interface AIProvider {
   breakdownTask(title: string, description?: string): Promise<AIBreakdownResult>
   suggestTopThree(tasks: Task[], energyLevel: number): Promise<string[]>
+  chat(userMessage: string, context: ChatContext): Promise<ChatResponse>
 }

@@ -3,16 +3,13 @@
 import { useState } from 'react'
 import { useTasks } from '@/hooks/useTasks'
 import TaskCard from '@/components/tasks/TaskCard'
-import NewTaskSheet from '@/components/tasks/NewTaskSheet'
 import BreakdownSheet from '@/components/tasks/BreakdownSheet'
 import BookmarkSheet from '@/components/tasks/BookmarkSheet'
 import TimerModal from '@/components/timer/TimerModal'
-import { Plus } from 'lucide-react'
 import type { Task } from '@/types'
 
 export default function TasksPage() {
-  const { tasks, loading, createTask, completeTask, deleteTask, saveSteps, toggleStep, saveContextBookmark } = useTasks()
-  const [newTaskOpen, setNewTaskOpen] = useState(false)
+  const { tasks, loading, completeTask, deleteTask, saveSteps, toggleStep, saveContextBookmark } = useTasks()
   const [breakdownTask, setBreakdownTask] = useState<Task | null>(null)
   const [bookmarkTask, setBookmarkTask] = useState<Task | null>(null)
   const [timerTask, setTimerTask] = useState<Task | null>(null)
@@ -86,15 +83,6 @@ export default function TasksPage() {
         </div>
       </div>
 
-      <button
-        onClick={() => setNewTaskOpen(true)}
-        aria-label="Nova tarefa"
-        className="fixed bottom-24 right-6 md:bottom-10 md:right-10 w-14 h-14 bg-ink hover:bg-terracotta text-background rounded-full shadow-lg shadow-ink/10 flex items-center justify-center transition-all active:scale-90"
-      >
-        <Plus className="w-6 h-6" strokeWidth={2} />
-      </button>
-
-      <NewTaskSheet open={newTaskOpen} onClose={() => setNewTaskOpen(false)} onCreate={(t, p) => createTask(t, p)} />
       <BreakdownSheet task={breakdownTask} onClose={() => setBreakdownTask(null)} onSave={saveSteps} />
       <BookmarkSheet task={bookmarkTask} onClose={() => setBookmarkTask(null)} onSave={saveContextBookmark} />
       <TimerModal task={timerTask} onClose={() => setTimerTask(null)} onComplete={handleCompleteTask} />
