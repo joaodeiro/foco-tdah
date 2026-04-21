@@ -4,6 +4,7 @@ import { Suspense, useEffect, useState } from 'react'
 import Link from 'next/link'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
+import { Input } from '@/components/ui/input'
 import { ArrowLeft } from 'lucide-react'
 import { toast } from 'sonner'
 
@@ -78,7 +79,7 @@ export default function LoginPage() {
           <form onSubmit={handleLogin} className="space-y-4">
             <div className="space-y-2">
               <label htmlFor="email" className="eyebrow block">E-mail</label>
-              <input
+              <Input
                 id="email"
                 name="email"
                 type="email"
@@ -89,7 +90,6 @@ export default function LoginPage() {
                 placeholder="você@email.com"
                 required
                 autoFocus
-                className="w-full bg-surface border border-hairline rounded-xl px-4 py-3.5 text-base text-ink placeholder:text-ink-faint focus:outline-none focus:border-terracotta focus:ring-2 focus:ring-terracotta/15 transition-all"
               />
             </div>
 
@@ -103,7 +103,7 @@ export default function LoginPage() {
                   Esqueci
                 </Link>
               </div>
-              <input
+              <Input
                 id="password"
                 name="password"
                 type="password"
@@ -112,7 +112,6 @@ export default function LoginPage() {
                 onChange={e => setPassword(e.target.value)}
                 placeholder="••••••••"
                 required
-                className="w-full bg-surface border border-hairline rounded-xl px-4 py-3.5 text-base text-ink placeholder:text-ink-faint focus:outline-none focus:border-terracotta focus:ring-2 focus:ring-terracotta/15 transition-all"
               />
             </div>
 

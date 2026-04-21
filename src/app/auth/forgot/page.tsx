@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
+import { Input } from '@/components/ui/input'
 import { ArrowLeft, Mail } from 'lucide-react'
 import { toast } from 'sonner'
 
@@ -61,7 +62,7 @@ export default function ForgotPasswordPage() {
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="space-y-2">
                 <label htmlFor="email" className="eyebrow block">E-mail</label>
-                <input
+                <Input
                   id="email"
                   name="email"
                   type="email"
@@ -72,7 +73,6 @@ export default function ForgotPasswordPage() {
                   placeholder="você@email.com"
                   required
                   autoFocus
-                  className="w-full bg-surface border border-hairline rounded-xl px-4 py-3.5 text-base text-ink placeholder:text-ink-faint focus:outline-none focus:border-terracotta focus:ring-2 focus:ring-terracotta/15 transition-all"
                 />
               </div>
 

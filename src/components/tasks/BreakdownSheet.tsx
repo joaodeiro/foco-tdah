@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet'
+import { Input } from '@/components/ui/input'
 import { Sparkles, Loader2 } from 'lucide-react'
 import { toast } from 'sonner'
 import type { Task } from '@/types'
@@ -87,32 +88,28 @@ export default function BreakdownSheet({ task, onClose, onSave }: Props) {
               {steps.map((step, i) => (
                 <div key={`step-${i}`} className="flex items-start gap-3">
                   <span className="text-ink-faint text-xs mt-3 tabular-nums shrink-0">{String(i + 1).padStart(2, '0')}</span>
-                  <input
+                  <Input
                     name={`step-${i}`}
-                    type="text"
-                    autoComplete="off"
-                    autoCorrect="off"
                     value={step}
                     onChange={e => setSteps(prev => prev.map((s, j) => j === i ? e.target.value : s))}
-                    className="flex-1 bg-surface border border-hairline rounded-xl px-3 py-2.5 text-sm text-ink focus:outline-none focus:border-terracotta/50"
+                    className="flex-1 py-2.5 text-sm"
                   />
                 </div>
               ))}
 
               <div className="flex items-center gap-2 pt-2">
                 <span className="eyebrow">Tempo estimado</span>
-                <input
+                <Input
                   name="estimated_minutes"
                   type="number"
                   inputMode="numeric"
-                  autoComplete="off"
                   min={1}
                   value={estimatedMinutes}
                   onChange={e => {
                     const n = Number(e.target.value)
                     setEstimatedMinutes(Number.isFinite(n) && n > 0 ? n : 1)
                   }}
-                  className="w-16 bg-surface border border-hairline rounded-lg px-2 py-1 text-sm text-ink text-center focus:outline-none focus:border-terracotta/50 tabular-nums"
+                  className="w-20 px-2 py-1 text-sm text-center"
                 />
                 <span className="text-xs text-ink-faint">min</span>
               </div>

@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { createClient } from '@/lib/supabase/client'
+import { Input } from '@/components/ui/input'
 import { LogOut } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
@@ -67,15 +68,13 @@ export default function ProfilePage() {
           <p className="text-sm text-ink-muted">{email}</p>
           <div className="space-y-2">
             <label htmlFor="name" className="eyebrow block">Como quer ser chamado</label>
-            <input
+            <Input
               id="name"
               name="name"
-              type="text"
               autoComplete="given-name"
               value={name}
               onChange={e => setName(e.target.value)}
               placeholder="Seu nome"
-              className="w-full bg-surface border border-hairline rounded-xl px-4 py-3 text-[15px] text-ink placeholder:text-ink-faint focus:outline-none focus:border-terracotta/50"
             />
           </div>
         </section>

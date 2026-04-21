@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet'
+import { Textarea } from '@/components/ui/textarea'
 import { Bookmark } from 'lucide-react'
 import type { Task } from '@/types'
 
@@ -38,15 +39,14 @@ export default function BookmarkSheet({ task, onClose, onSave }: Props) {
             O que estava fazendo? O que vem depois?
           </p>
 
-          <textarea
+          <Textarea
             name="bookmark"
-            autoComplete="off"
             autoFocus
             value={text}
             onChange={e => setText(e.target.value)}
             placeholder="Ex: Fiz o outline, próximo é escrever a intro. Arquivo em /docs"
             rows={5}
-            className="w-full bg-surface border border-hairline rounded-xl px-4 py-3 text-[15px] text-ink placeholder:text-ink-faint focus:outline-none focus:border-ochre/50 resize-none leading-relaxed"
+            className="focus:border-ochre focus:ring-ochre/15"
           />
 
           <button

@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
+import { Input } from '@/components/ui/input'
 import { toast } from 'sonner'
 
 export default function ResetPasswordPage() {
@@ -79,7 +80,7 @@ export default function ResetPasswordPage() {
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
               <label htmlFor="password" className="eyebrow block">Nova senha</label>
-              <input
+              <Input
                 id="password"
                 name="password"
                 type="password"
@@ -90,13 +91,12 @@ export default function ResetPasswordPage() {
                 minLength={8}
                 required
                 autoFocus
-                className="w-full bg-surface border border-hairline rounded-xl px-4 py-3.5 text-base text-ink placeholder:text-ink-faint focus:outline-none focus:border-terracotta focus:ring-2 focus:ring-terracotta/15 transition-all"
               />
             </div>
 
             <div className="space-y-2">
               <label htmlFor="confirm" className="eyebrow block">Confirmar</label>
-              <input
+              <Input
                 id="confirm"
                 name="confirm"
                 type="password"
@@ -106,7 +106,6 @@ export default function ResetPasswordPage() {
                 placeholder="Digite de novo"
                 minLength={8}
                 required
-                className="w-full bg-surface border border-hairline rounded-xl px-4 py-3.5 text-base text-ink placeholder:text-ink-faint focus:outline-none focus:border-terracotta focus:ring-2 focus:ring-terracotta/15 transition-all"
               />
             </div>
 

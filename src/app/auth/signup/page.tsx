@@ -4,6 +4,7 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
+import { Input } from '@/components/ui/input'
 import { ArrowLeft, Mail } from 'lucide-react'
 import { toast } from 'sonner'
 
@@ -47,14 +48,12 @@ export default function SignupPage() {
         return
       }
 
-      // Se já veio com sessão (confirmação de e-mail desabilitada), entra direto
       if (data.session) {
         router.push('/app')
         router.refresh()
         return
       }
 
-      // Caso contrário, mostra tela "confira seu e-mail"
       setSent(true)
     } finally {
       setLoading(false)
@@ -87,7 +86,7 @@ export default function SignupPage() {
             <form onSubmit={handleSignup} className="space-y-4">
               <div className="space-y-2">
                 <label htmlFor="email" className="eyebrow block">E-mail</label>
-                <input
+                <Input
                   id="email"
                   name="email"
                   type="email"
@@ -98,13 +97,12 @@ export default function SignupPage() {
                   placeholder="você@email.com"
                   required
                   autoFocus
-                  className="w-full bg-surface border border-hairline rounded-xl px-4 py-3.5 text-base text-ink placeholder:text-ink-faint focus:outline-none focus:border-terracotta focus:ring-2 focus:ring-terracotta/15 transition-all"
                 />
               </div>
 
               <div className="space-y-2">
                 <label htmlFor="password" className="eyebrow block">Senha</label>
-                <input
+                <Input
                   id="password"
                   name="password"
                   type="password"
@@ -114,13 +112,12 @@ export default function SignupPage() {
                   placeholder="Mínimo 8 caracteres"
                   minLength={8}
                   required
-                  className="w-full bg-surface border border-hairline rounded-xl px-4 py-3.5 text-base text-ink placeholder:text-ink-faint focus:outline-none focus:border-terracotta focus:ring-2 focus:ring-terracotta/15 transition-all"
                 />
               </div>
 
               <div className="space-y-2">
                 <label htmlFor="confirm" className="eyebrow block">Confirmar senha</label>
-                <input
+                <Input
                   id="confirm"
                   name="confirm"
                   type="password"
@@ -130,7 +127,6 @@ export default function SignupPage() {
                   placeholder="Digite de novo"
                   minLength={8}
                   required
-                  className="w-full bg-surface border border-hairline rounded-xl px-4 py-3.5 text-base text-ink placeholder:text-ink-faint focus:outline-none focus:border-terracotta focus:ring-2 focus:ring-terracotta/15 transition-all"
                 />
               </div>
 

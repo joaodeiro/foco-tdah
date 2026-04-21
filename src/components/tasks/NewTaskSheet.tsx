@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet'
+import { Input } from '@/components/ui/input'
 import type { Task } from '@/types'
 
 interface Props {
@@ -37,16 +38,12 @@ export default function NewTaskSheet({ open, onClose, onCreate }: Props) {
         </SheetHeader>
 
         <form onSubmit={handleSubmit} className="space-y-5 px-4 pb-6">
-          <input
+          <Input
             name="title"
-            type="text"
-            autoComplete="off"
-            autoCorrect="off"
             autoFocus
             value={title}
             onChange={e => setTitle(e.target.value)}
             placeholder="O que precisa ser feito?"
-            className="w-full bg-surface border border-hairline rounded-xl px-4 py-3.5 text-[15px] text-ink placeholder:text-ink-faint focus:outline-none focus:border-terracotta/50"
           />
 
           <div className="space-y-2">

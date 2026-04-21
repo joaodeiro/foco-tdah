@@ -3,6 +3,8 @@
 import { useState, useEffect } from 'react'
 import { useJournal } from '@/hooks/useJournal'
 import { useTasks } from '@/hooks/useTasks'
+import { Input } from '@/components/ui/input'
+import { Textarea } from '@/components/ui/textarea'
 import { Flame, Trophy, Plus, X, Check } from 'lucide-react'
 import { formatDisplayDate, todayDate } from '@/lib/utils'
 import type { MoodLevel } from '@/types'
@@ -102,21 +104,18 @@ export default function JournalPage() {
           </div>
 
           <div className="flex gap-2">
-            <input
+            <Input
               name="newWin"
-              type="text"
-              autoComplete="off"
-              autoCorrect="off"
               value={newWin}
               onChange={e => setNewWin(e.target.value)}
               onKeyDown={e => e.key === 'Enter' && addWin()}
               placeholder="Adicionar conquista…"
-              className="flex-1 bg-surface border border-hairline rounded-xl px-4 py-2.5 text-[15px] text-ink placeholder:text-ink-faint focus:outline-none focus:border-terracotta/50"
+              className="flex-1"
             />
             <button
               onClick={addWin}
               aria-label="Adicionar"
-              className="w-11 h-11 bg-ink text-background rounded-xl flex items-center justify-center hover:bg-terracotta transition-colors"
+              className="w-11 h-11 bg-ink text-background rounded-xl flex items-center justify-center hover:bg-terracotta transition-colors shrink-0"
             >
               <Plus className="w-4 h-4" />
             </button>
@@ -147,14 +146,12 @@ export default function JournalPage() {
         {/* Reflection */}
         <section className="space-y-3">
           <h2 className="font-serif text-xl text-ink">Reflexão</h2>
-          <textarea
+          <Textarea
             name="reflection"
-            autoComplete="off"
             value={reflection}
             onChange={e => setReflection(e.target.value)}
             placeholder="O que funcionou hoje? O que poderia ser diferente?"
             rows={5}
-            className="w-full bg-surface border border-hairline rounded-xl px-4 py-3 text-[15px] text-ink placeholder:text-ink-faint focus:outline-none focus:border-terracotta/50 resize-none leading-relaxed"
           />
         </section>
 
