@@ -6,7 +6,7 @@ const principles = [
     num: '01',
     icon: Brain,
     title: "Neurociência aplicada",
-    body: "Fundamentado no trabalho de Barkley, Hallowell e Brown — não em produtividade genérica.",
+    body: "Fundamentado no trabalho de Barkley, Hallowell e Brown.",
   },
   {
     num: '02',
@@ -17,14 +17,14 @@ const principles = [
   {
     num: '03',
     icon: Timer,
-    title: "Timer contra cegueira temporal",
-    body: "Você vê o tempo passando. O cérebro TDAH entende visual, não abstração.",
+    title: "Timer para a cegueira temporal",
+    body: "Você vê o tempo passando. Visualização ajuda a mente TDAH a sentir a duração.",
   },
   {
     num: '04',
     icon: Compass,
-    title: "Foco no feito, não no que faltou",
-    body: "Diário de conquistas e streaks que celebram o progresso, não a culpa.",
+    title: "Registro de conquistas",
+    body: "Streaks e diário que firmam o que você conseguiu fazer ao longo dos dias.",
   },
 ]
 
@@ -53,16 +53,16 @@ export default function LandingPage() {
           <span className="serial">Para o cérebro 2e · PT-BR</span>
         </div>
         <h1 className="font-serif text-5xl md:text-7xl leading-[1.02] tracking-tight text-ink">
-          Produtividade que
+          Produtividade
           <br />
-          trabalha <em className="text-terracotta">com</em> seu
+          pensada na escala
           <br />
-          cérebro, não contra.
+          do cérebro <em className="text-terracotta">TDAH</em>.
         </h1>
         <p className="mt-8 max-w-lg text-lg text-ink-muted leading-relaxed">
-          Kairos — em grego, o momento oportuno para agir.
-          Não o tempo que passa (chronos), mas a janela exata
-          em que começar é possível.
+          Kairos, em grego, é o momento oportuno para agir. A janela
+          exata em que começar é possível. Este app ajuda você a
+          reconhecer essa janela e entrar nela.
         </p>
 
         <div className="mt-10 flex items-center gap-5 flex-wrap">
@@ -104,7 +104,7 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Pull quote */}
+      {/* Fundamento */}
       <section className="px-6 md:px-10 py-20 max-w-2xl mx-auto">
         <div className="flex items-center gap-4 mb-10">
           <span className="serial">§ 02</span>
@@ -112,11 +112,10 @@ export default function LandingPage() {
           <span className="serial">Fundamento</span>
         </div>
         <blockquote className="font-serif text-3xl md:text-4xl italic leading-snug text-ink text-center">
-          &ldquo;O TDAH não é déficit de atenção. É dificuldade de
-          regular a atenção — direcionar ela para onde importa,
-          quando importa.&rdquo;
+          &ldquo;O TDAH é um transtorno da regulação da atenção: a
+          capacidade de dirigi-la para onde importa, quando importa.&rdquo;
         </blockquote>
-        <p className="mt-6 font-mono text-[11px] uppercase tracking-[0.22em] text-ink-faint text-center">— Russell Barkley</p>
+        <p className="mt-6 font-mono text-[11px] uppercase tracking-[0.22em] text-ink-faint text-center">Russell Barkley</p>
       </section>
 
       {/* Final CTA */}
