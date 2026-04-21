@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { todayDate } from '@/lib/utils'
 import type { Task, TaskStep } from '@/types'
-import { toast } from 'sonner'
+import { showError, showSuccess } from '@/lib/errors'
 
 export function useTasks(date?: string) {
   const [tasks, setTasks] = useState<Task[]>([])
@@ -48,7 +48,7 @@ export function useTasks(date?: string) {
       .select()
       .single()
 
-    if (error) { toast.error('Erro ao criar tarefa'); return null }
+    if (error) { showError(error); return null }
 
     const task: Task = { ...data, steps: [] }
     setTasks(prev => [...prev, task])
@@ -61,7 +61,7 @@ export function useTasks(date?: string) {
       .update({ ...updates, updated_at: new Date().toISOString() })
       .eq('id', id)
 
-    if (error) { toast.error('Erro ao atualizar'); return false }
+    if (error) { showError(error); return false }
 
     setTasks(prev => prev.map(t => t.id === id ? { ...t, ...updates } : t))
     return true
@@ -72,12 +72,12 @@ export function useTasks(date?: string) {
       status: 'completed',
       completed_at: new Date().toISOString(),
     })
-    if (ok) toast.success('Tarefa concluída! 🎉')
+    if (ok) showSuccess('Tarefa concluída.', 'Mais uma conquista para o diário.')
   }
 
   async function deleteTask(id: string) {
     const { error } = await supabase.from('tasks').delete().eq('id', id)
-    if (error) { toast.error('Erro ao deletar'); return }
+    if (error) { showError(error); return }
     setTasks(prev => prev.filter(t => t.id !== id))
   }
 
@@ -94,7 +94,7 @@ export function useTasks(date?: string) {
       .insert(newSteps)
       .select()
 
-    if (insertError) { toast.error('Erro ao salvar passos'); return }
+    if (insertError) { showError(insertError); return }
 
     const newIds = (inserted || []).map(s => s.id)
     const { error: deleteError } = await supabase
@@ -129,7 +129,7 @@ export function useTasks(date?: string) {
 
   async function saveContextBookmark(taskId: string, bookmark: string) {
     const ok = await updateTask(taskId, { context_bookmark: bookmark, status: 'paused' })
-    if (ok) toast.success('Contexto salvo! Pode ir 👋')
+    if (ok) showSuccess('Contexto salvo.', 'Pode pausar sem perder de onde parou.')
   }
 
   return {

@@ -5,7 +5,7 @@ import { createClient } from '@/lib/supabase/client'
 import { Input } from '@/components/ui/input'
 import { LogOut } from 'lucide-react'
 import { useRouter } from 'next/navigation'
-import { toast } from 'sonner'
+import { showError, showSuccess } from '@/lib/errors'
 
 export default function ProfilePage() {
   const [email, setEmail] = useState('')
@@ -42,8 +42,8 @@ export default function ProfilePage() {
       .eq('id', user.id)
 
     setLoading(false)
-    if (error) { toast.error('Erro ao salvar'); return }
-    toast.success('Perfil atualizado.')
+    if (error) { showError(error); return }
+    showSuccess('Perfil atualizado.')
   }
 
   async function handleLogout() {

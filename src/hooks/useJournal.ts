@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { todayDate } from '@/lib/utils'
 import type { JournalEntry, Streak } from '@/types'
-import { toast } from 'sonner'
+import { showError, showSuccess } from '@/lib/errors'
 
 export function useJournal() {
   const [entry, setEntry] = useState<JournalEntry | null>(null)
@@ -55,11 +55,11 @@ export function useJournal() {
       .select()
       .single()
 
-    if (error) { toast.error('Erro ao salvar'); return }
+    if (error) { showError(error); return }
     setEntry(data)
 
     await updateStreak(user.id)
-    toast.success('Diário salvo! ✨')
+    showSuccess('Diário salvo.')
   }
 
   async function updateStreak(userId: string) {
@@ -88,7 +88,7 @@ export function useJournal() {
     if (!error) {
       setStreak({ current: newCurrent, longest: newLongest, last_active_date: today })
       if (newCurrent > 1) {
-        toast.success(`🔥 ${newCurrent} dias seguidos!`)
+        showSuccess(`${newCurrent} dias seguidos`, 'Você tá construindo um hábito.')
       }
     }
   }

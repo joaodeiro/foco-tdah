@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { todayDate } from '@/lib/utils'
 import type { DayPlan, Task } from '@/types'
-import { toast } from 'sonner'
+import { showError, showInfo } from '@/lib/errors'
 
 export function useDayPlan() {
   const [plan, setPlan] = useState<DayPlan | null>(null)
@@ -62,7 +62,7 @@ export function useDayPlan() {
     })
 
     if (!res.ok) {
-      toast.error('Não consegui sugerir agora. Tente de novo.')
+      showError(new Error('A IA não respondeu a tempo. Tente de novo em alguns segundos.'))
       return
     }
 
@@ -71,7 +71,7 @@ export function useDayPlan() {
     const safeIds = (ids || []).filter(id => validIds.has(id)).slice(0, 3)
 
     if (safeIds.length === 0) {
-      toast.info('A IA não sugeriu nenhuma tarefa válida.')
+      showInfo('A IA não sugeriu nenhuma tarefa válida.', 'Adicione mais tarefas e tente de novo.')
       return
     }
 

@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
 import { Input } from '@/components/ui/input'
 import { ArrowLeft, Mail } from 'lucide-react'
-import { toast } from 'sonner'
+import { showError } from '@/lib/errors'
 
 export default function ForgotPasswordPage() {
   const [email, setEmail] = useState('')
@@ -23,7 +23,7 @@ export default function ForgotPasswordPage() {
       })
 
       if (error) {
-        toast.error('Não consegui enviar o link. Tente de novo.')
+        showError(error)
         return
       }
 

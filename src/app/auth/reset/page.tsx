@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { Input } from '@/components/ui/input'
-import { toast } from 'sonner'
+import { showError, showSuccess, showValidation } from '@/lib/errors'
 
 export default function ResetPasswordPage() {
   const [password, setPassword] = useState('')
@@ -18,7 +18,7 @@ export default function ResetPasswordPage() {
       const supabase = createClient()
       const { data: { session } } = await supabase.auth.getSession()
       if (!session) {
-        toast.error('Link expirado. Peça um novo em "Esqueci minha senha".')
+        showValidation('Link de recuperação expirado.', 'Peça um novo em "Esqueci minha senha".')
         router.push('/auth/forgot')
         return
       }
@@ -31,11 +31,11 @@ export default function ResetPasswordPage() {
     e.preventDefault()
 
     if (password.length < 8) {
-      toast.error('Senha precisa ter pelo menos 8 caracteres.')
+      showValidation('Senha muito curta.', 'Precisa ter pelo menos 8 caracteres.')
       return
     }
     if (password !== confirm) {
-      toast.error('As senhas não coincidem.')
+      showValidation('As senhas não coincidem.', 'Digite a mesma senha nos dois campos.')
       return
     }
 
@@ -45,11 +45,11 @@ export default function ResetPasswordPage() {
       const { error } = await supabase.auth.updateUser({ password })
 
       if (error) {
-        toast.error('Não consegui atualizar a senha. Tente de novo.')
+        showError(error)
         return
       }
 
-      toast.success('Senha atualizada.')
+      showSuccess('Senha atualizada.', 'Já pode entrar com ela.')
       router.push('/app')
       router.refresh()
     } finally {

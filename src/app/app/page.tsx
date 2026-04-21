@@ -11,7 +11,7 @@ import BookmarkSheet from '@/components/tasks/BookmarkSheet'
 import TimerModal from '@/components/timer/TimerModal'
 import { formatDisplayDate, todayDate } from '@/lib/utils'
 import type { Task } from '@/types'
-import { toast } from 'sonner'
+import { showInfo, showSuccess } from '@/lib/errors'
 
 const energyLabels = ['', 'Muito baixa', 'Baixa', 'Média', 'Boa', 'Ótima']
 const energyEmojis = ['', '😴', '😕', '😐', '😊', '⚡']
@@ -39,13 +39,13 @@ export default function TodayPage() {
 
   async function handleSuggestTopThree() {
     if (!plan?.energy_level) {
-      toast.info('Primeiro defina seu nível de energia.')
+      showInfo('Defina sua energia primeiro.', 'A IA usa ela para escolher tarefas do seu tamanho agora.')
       return
     }
     setSuggestingTopThree(true)
     await suggestTopThree(pendingTasks)
     setSuggestingTopThree(false)
-    toast.success('Top 3 sugerido pela IA.')
+    showSuccess('Top 3 sugerido.', 'Começar por uma delas já vale o dia.')
   }
 
   async function handleCompleteTask(id: string) {

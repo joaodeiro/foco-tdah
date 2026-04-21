@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { Input } from '@/components/ui/input'
 import { ArrowLeft, Mail } from 'lucide-react'
-import { toast } from 'sonner'
+import { showError, showValidation } from '@/lib/errors'
 
 export default function SignupPage() {
   const [email, setEmail] = useState('')
@@ -20,11 +20,11 @@ export default function SignupPage() {
     e.preventDefault()
 
     if (password.length < 8) {
-      toast.error('Senha precisa ter pelo menos 8 caracteres.')
+      showValidation('Senha muito curta.', 'Precisa ter pelo menos 8 caracteres.')
       return
     }
     if (password !== confirm) {
-      toast.error('As senhas não coincidem.')
+      showValidation('As senhas não coincidem.', 'Digite a mesma senha nos dois campos.')
       return
     }
 
@@ -40,11 +40,7 @@ export default function SignupPage() {
       })
 
       if (error) {
-        if (error.message.toLowerCase().includes('already')) {
-          toast.error('Esse e-mail já tem conta. Tente entrar.')
-        } else {
-          toast.error('Não consegui criar a conta. Tente de novo.')
-        }
+        showError(error)
         return
       }
 

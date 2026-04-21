@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet'
 import { Input } from '@/components/ui/input'
 import { Sparkles, Loader2 } from 'lucide-react'
-import { toast } from 'sonner'
+import { showError } from '@/lib/errors'
 import type { Task } from '@/types'
 
 interface Props {
@@ -38,7 +38,7 @@ export default function BreakdownSheet({ task, onClose, onSave }: Props) {
       })
 
       if (!res.ok) {
-        toast.error('Não consegui quebrar a tarefa agora. Tente de novo.')
+        showError(new Error('A IA não conseguiu quebrar essa tarefa agora. Tente com um título mais específico.'))
         return
       }
 

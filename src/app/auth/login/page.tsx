@@ -6,15 +6,18 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { Input } from '@/components/ui/input'
 import { ArrowLeft } from 'lucide-react'
-import { toast } from 'sonner'
+import { showError, showValidation } from '@/lib/errors'
 
 function LoginErrorToasts() {
   const searchParams = useSearchParams()
 
   useEffect(() => {
     const err = searchParams.get('error')
-    if (err === 'invalid_code') toast.error('Link expirado ou inválido. Tente de novo.')
-    else if (err === 'missing_code') toast.error('Falhou ao validar seu link.')
+    if (err === 'invalid_code') {
+      showValidation('Seu link expirou ou já foi usado.', 'Peça um novo em "Esqueci minha senha".')
+    } else if (err === 'missing_code') {
+      showValidation('Não consegui validar esse link.', 'Peça um novo link e tente de novo.')
+    }
   }, [searchParams])
 
   return null
@@ -35,11 +38,7 @@ export default function LoginPage() {
       const { error } = await supabase.auth.signInWithPassword({ email, password })
 
       if (error) {
-        if (error.message.toLowerCase().includes('invalid')) {
-          toast.error('E-mail ou senha incorretos.')
-        } else {
-          toast.error('Não consegui fazer login. Tente de novo.')
-        }
+        showError(error)
         return
       }
 
