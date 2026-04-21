@@ -3,7 +3,7 @@
 import { useEffect } from 'react'
 import { Dialog, DialogContent } from '@/components/ui/dialog'
 import { useTimer } from '@/hooks/useTimer'
-import { Play, Pause, RotateCcw, X, CheckCircle2 } from 'lucide-react'
+import { Play, Pause, RotateCcw, X, Check } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import type { Task } from '@/types'
 
@@ -14,7 +14,7 @@ interface Props {
   onComplete: (taskId: string) => void
 }
 
-const CIRCUMFERENCE = 2 * Math.PI * 52 // radius 52
+const CIRCUMFERENCE = 2 * Math.PI * 52
 
 async function ensureNotificationPermission(): Promise<boolean> {
   if (typeof window === 'undefined' || !('Notification' in window)) return false
@@ -27,7 +27,6 @@ async function ensureNotificationPermission(): Promise<boolean> {
 export default function TimerModal({ task, durationMinutes = 25, onClose, onComplete }: Props) {
   const timer = useTimer(durationMinutes)
 
-  // Auto-start when task is set
   useEffect(() => {
     if (!task) return
     timer.reset()
@@ -37,10 +36,9 @@ export default function TimerModal({ task, durationMinutes = 25, onClose, onComp
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [task?.id])
 
-  // Notify when finished
   useEffect(() => {
     if (timer.state === 'finished' && typeof window !== 'undefined' && 'Notification' in window && Notification.permission === 'granted') {
-      new Notification('Foco! ⏱️', { body: `Sessão encerrada: ${task?.title ?? ''}` })
+      new Notification('Foco', { body: `Sessão encerrada: ${task?.title ?? ''}` })
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [timer.state])
@@ -48,47 +46,45 @@ export default function TimerModal({ task, durationMinutes = 25, onClose, onComp
   if (!task) return null
 
   const strokeDash = CIRCUMFERENCE - (timer.progress / 100) * CIRCUMFERENCE
+  const progressColor = 'var(--terracotta)'
+  const finishedColor = 'var(--sage)'
 
   return (
     <Dialog open={!!task} onOpenChange={onClose}>
-      <DialogContent className="bg-zinc-950 border-zinc-800 rounded-3xl max-w-sm mx-auto p-0 overflow-hidden">
-        <div className="p-6 space-y-6">
-          {/* Close */}
+      <DialogContent className="bg-background border-hairline rounded-3xl max-w-sm mx-auto p-0 overflow-hidden">
+        <div className="p-8 space-y-7">
           <div className="flex items-center justify-between">
-            <span className="text-xs text-zinc-600 uppercase tracking-widest font-medium">
-              {timer.state === 'finished' ? 'Sessão concluída!' : 'Modo foco'}
-            </span>
+            <p className="eyebrow">
+              {timer.state === 'finished' ? 'Sessão concluída' : 'Modo foco'}
+            </p>
             <button
               onClick={onClose}
-              className="text-zinc-600 hover:text-zinc-400 transition-colors"
+              className="text-ink-faint hover:text-ink transition-colors"
               aria-label="Fechar"
             >
               <X className="w-4 h-4" />
             </button>
           </div>
 
-          {/* Task title */}
-          <p className="text-sm text-zinc-300 text-center leading-snug px-2">
+          <p className="font-serif text-xl text-ink text-center leading-snug">
             {task.title}
           </p>
 
           {/* Circular Timer */}
           <div className="flex items-center justify-center">
-            <div className="relative w-40 h-40">
+            <div className="relative w-48 h-48">
               <svg className="w-full h-full -rotate-90" viewBox="0 0 120 120">
-                {/* Background ring */}
                 <circle
                   cx="60" cy="60" r="52"
                   fill="none"
-                  stroke="#27272a"
-                  strokeWidth="8"
+                  stroke="var(--hairline)"
+                  strokeWidth="2"
                 />
-                {/* Progress ring */}
                 <circle
                   cx="60" cy="60" r="52"
                   fill="none"
-                  stroke={timer.state === 'finished' ? '#22c55e' : '#7c3aed'}
-                  strokeWidth="8"
+                  stroke={timer.state === 'finished' ? finishedColor : progressColor}
+                  strokeWidth="2"
                   strokeLinecap="round"
                   strokeDasharray={CIRCUMFERENCE}
                   strokeDashoffset={strokeDash}
@@ -97,15 +93,16 @@ export default function TimerModal({ task, durationMinutes = 25, onClose, onComp
               </svg>
               <div className="absolute inset-0 flex flex-col items-center justify-center">
                 <span className={cn(
-                  'text-3xl font-mono font-bold tabular-nums',
-                  timer.state === 'finished' ? 'text-green-400' : 'text-white',
+                  'font-serif text-5xl tabular-nums leading-none',
+                  timer.state === 'finished' ? 'text-sage' : 'text-ink',
                 )}>
                   {timer.display}
                 </span>
-                <span className="text-xs text-zinc-600 mt-1">
-                  {timer.state === 'running' ? 'focando...' :
-                   timer.state === 'paused' ? 'pausado' :
-                   timer.state === 'finished' ? 'pronto!' : 'pronto'}
+                <span className="eyebrow mt-3">
+                  {timer.state === 'running' ? 'focando'
+                    : timer.state === 'paused' ? 'pausado'
+                    : timer.state === 'finished' ? 'pronto'
+                    : 'pronto'}
                 </span>
               </div>
             </div>
@@ -113,59 +110,58 @@ export default function TimerModal({ task, durationMinutes = 25, onClose, onComp
 
           {/* Controls */}
           {timer.state !== 'finished' ? (
-            <div className="flex items-center justify-center gap-4">
+            <div className="flex items-center justify-center gap-5">
               <button
                 onClick={timer.reset}
-                className="w-10 h-10 rounded-full bg-zinc-900 border border-zinc-800 flex items-center justify-center text-zinc-500 hover:text-zinc-300 transition-colors"
-                aria-label="Reiniciar timer"
+                className="w-10 h-10 rounded-full border border-hairline flex items-center justify-center text-ink-muted hover:text-ink hover:border-ink/30 transition-colors"
+                aria-label="Reiniciar"
               >
-                <RotateCcw className="w-4 h-4" />
+                <RotateCcw className="w-4 h-4" strokeWidth={1.6} />
               </button>
 
               <button
                 onClick={timer.state === 'running' ? timer.pause : timer.resume}
-                className="w-16 h-16 rounded-full bg-violet-600 hover:bg-violet-500 flex items-center justify-center text-white transition-colors shadow-lg shadow-violet-500/25"
+                className="w-16 h-16 rounded-full bg-ink hover:bg-terracotta text-background flex items-center justify-center transition-colors"
                 aria-label={timer.state === 'running' ? 'Pausar' : 'Iniciar'}
               >
                 {timer.state === 'running'
-                  ? <Pause className="w-6 h-6" fill="currentColor" />
-                  : <Play className="w-6 h-6" fill="currentColor" />
+                  ? <Pause className="w-5 h-5" fill="currentColor" strokeWidth={0} />
+                  : <Play className="w-5 h-5" fill="currentColor" strokeWidth={0} />
                 }
               </button>
 
               <button
                 onClick={() => onComplete(task.id)}
-                className="w-10 h-10 rounded-full bg-zinc-900 border border-zinc-800 flex items-center justify-center text-zinc-500 hover:text-green-400 transition-colors"
-                aria-label="Marcar como concluída"
+                className="w-10 h-10 rounded-full border border-hairline flex items-center justify-center text-ink-muted hover:text-sage hover:border-sage/40 transition-colors"
+                aria-label="Concluir"
               >
-                <CheckCircle2 className="w-4 h-4" />
+                <Check className="w-4 h-4" strokeWidth={1.8} />
               </button>
             </div>
           ) : (
             <div className="flex flex-col gap-3">
               <button
                 onClick={() => onComplete(task.id)}
-                className="w-full py-3 bg-green-600 hover:bg-green-500 text-white rounded-xl font-semibold flex items-center justify-center gap-2 transition-colors"
+                className="w-full py-3.5 bg-ink hover:bg-sage text-background rounded-full font-medium inline-flex items-center justify-center gap-2 transition-colors"
               >
-                <CheckCircle2 className="w-4 h-4" />
-                Marcar como concluída 🎉
+                <Check className="w-4 h-4" strokeWidth={2} />
+                Marcar como concluída
               </button>
               <button
                 onClick={onClose}
-                className="w-full py-2 text-zinc-500 text-sm hover:text-zinc-300 transition-colors"
+                className="w-full py-2 text-ink-muted text-sm hover:text-ink transition-colors"
               >
                 Continuar depois
               </button>
             </div>
           )}
 
-          {/* Steps quick view */}
           {task.steps.length > 0 && timer.state !== 'finished' && (
-            <div className="bg-zinc-900 rounded-xl p-3 space-y-1.5">
-              <p className="text-[10px] text-zinc-600 uppercase tracking-widest">Próximos passos</p>
+            <div className="border-t border-hairline pt-5 space-y-2">
+              <p className="eyebrow">Próximos passos</p>
               {task.steps.filter(s => !s.completed).slice(0, 3).map(step => (
-                <p key={step.id} className="text-xs text-zinc-400 flex items-start gap-2">
-                  <span className="text-violet-500 mt-0.5">›</span>
+                <p key={step.id} className="text-sm text-ink-muted leading-relaxed flex items-start gap-2">
+                  <span className="text-terracotta mt-0.5">›</span>
                   {step.content}
                 </p>
               ))}

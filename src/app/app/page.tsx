@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { Plus, Sparkles, Zap } from 'lucide-react'
+import { Plus, Sparkles } from 'lucide-react'
 import { useTasks } from '@/hooks/useTasks'
 import { useDayPlan } from '@/hooks/useDayPlan'
 import TaskCard from '@/components/tasks/TaskCard'
@@ -9,12 +9,11 @@ import NewTaskSheet from '@/components/tasks/NewTaskSheet'
 import BreakdownSheet from '@/components/tasks/BreakdownSheet'
 import BookmarkSheet from '@/components/tasks/BookmarkSheet'
 import TimerModal from '@/components/timer/TimerModal'
-import { Card } from '@/components/ui/card'
 import { formatDisplayDate, todayDate } from '@/lib/utils'
 import type { Task } from '@/types'
 import { toast } from 'sonner'
 
-const energyLabels = ['', '😴 Muito baixa', '😕 Baixa', '😐 Média', '😊 Boa', '⚡ Ótima']
+const energyLabels = ['', 'Muito baixa', 'Baixa', 'Média', 'Boa', 'Ótima']
 const energyEmojis = ['', '😴', '😕', '😐', '😊', '⚡']
 
 export default function TodayPage() {
@@ -40,13 +39,13 @@ export default function TodayPage() {
 
   async function handleSuggestTopThree() {
     if (!plan?.energy_level) {
-      toast.info('Primeiro defina seu nível de energia hoje.')
+      toast.info('Primeiro defina seu nível de energia.')
       return
     }
     setSuggestingTopThree(true)
     await suggestTopThree(pendingTasks)
     setSuggestingTopThree(false)
-    toast.success('Top 3 sugerido pela IA!')
+    toast.success('Top 3 sugerido pela IA.')
   }
 
   async function handleCompleteTask(id: string) {
@@ -55,26 +54,22 @@ export default function TodayPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#0d0d0d]">
-      {/* Header */}
-      <div className="px-5 pt-14 pb-5 space-y-1.5">
-        <div className="flex items-center gap-2">
-          <div className="w-7 h-7 rounded-xl bg-violet-600 flex items-center justify-center">
-            <Zap className="w-4 h-4 text-white" fill="currentColor" />
-          </div>
-          <span className="text-sm text-zinc-500 capitalize">{formatDisplayDate(today)}</span>
-        </div>
-        <h1 className="text-3xl font-bold text-white tracking-tight">Hoje</h1>
-      </div>
+    <div className="min-h-screen bg-background">
+      <header className="px-6 pt-14 pb-6 max-w-xl mx-auto">
+        <p className="eyebrow capitalize">{formatDisplayDate(today)}</p>
+        <h1 className="font-serif text-5xl leading-none text-ink mt-3">Hoje</h1>
+      </header>
 
-      <div className="px-5 space-y-6 pb-32">
+      <div className="px-6 space-y-10 pb-32 max-w-xl mx-auto">
 
-        {/* Energy Level */}
-        <Card className="bg-zinc-900 border-zinc-800 rounded-2xl p-5 space-y-4">
-          <div className="flex items-center justify-between">
-            <p className="text-base font-semibold text-zinc-100">Como está sua energia?</p>
+        {/* Energy */}
+        <section className="space-y-4">
+          <div className="flex items-baseline justify-between">
+            <h2 className="font-serif text-xl text-ink">Como está sua energia?</h2>
             {plan?.energy_level && (
-              <span className="text-sm text-zinc-400">{energyLabels[plan.energy_level]}</span>
+              <span className="text-sm text-ink-muted italic font-serif">
+                {energyLabels[plan.energy_level]}
+              </span>
             )}
           </div>
           <div className="flex gap-2">
@@ -82,42 +77,42 @@ export default function TodayPage() {
               <button
                 key={level}
                 onClick={() => setEnergyLevel(level)}
-                className={`flex-1 h-11 rounded-xl text-lg font-bold transition-all active:scale-95 ${
+                className={`flex-1 h-12 rounded-xl text-lg transition-all active:scale-95 border ${
                   plan?.energy_level === level
-                    ? 'bg-violet-600 text-white shadow-md shadow-violet-500/30 scale-105'
-                    : 'bg-zinc-800 text-zinc-400 hover:bg-zinc-700'
+                    ? 'bg-ink text-background border-ink'
+                    : 'bg-surface text-ink border-hairline hover:border-ink/30'
                 }`}
               >
                 {energyEmojis[level]}
               </button>
             ))}
           </div>
-        </Card>
+        </section>
 
         {/* Top 3 */}
-        <div className="space-y-3">
-          <div className="flex items-center justify-between">
-            <h2 className="text-base font-semibold text-zinc-100 flex items-center gap-2">
-              <span className="text-violet-400">⚡</span> Top 3 de hoje
-            </h2>
+        <section className="space-y-4">
+          <div className="flex items-baseline justify-between">
+            <h2 className="font-serif text-xl text-ink">Top 3 de hoje</h2>
             <button
               onClick={handleSuggestTopThree}
               disabled={suggestingTopThree}
-              className="flex items-center gap-1.5 text-sm text-zinc-500 hover:text-violet-400 transition-colors disabled:opacity-50"
+              className="inline-flex items-center gap-1.5 text-sm text-ink-muted hover:text-terracotta transition-colors disabled:opacity-50"
             >
-              <Sparkles className="w-3.5 h-3.5" />
-              {suggestingTopThree ? 'Sugerindo...' : 'Sugerir IA'}
+              <Sparkles className="w-3.5 h-3.5" strokeWidth={1.6} />
+              {suggestingTopThree ? 'Sugerindo…' : 'Sugerir IA'}
             </button>
           </div>
 
           {topThree.length === 0 ? (
-            <Card className="bg-zinc-900/40 border-dashed border-zinc-800 rounded-2xl p-6 text-center">
-              <p className="text-sm text-zinc-600">
-                Adicione tarefas e use &quot;Sugerir IA&quot; para definir seu foco.
+            <div className="border border-dashed border-hairline rounded-2xl p-8 text-center">
+              <p className="text-sm text-ink-faint leading-relaxed">
+                Adicione tarefas e use <em className="font-serif">Sugerir IA</em>
+                <br />
+                para definir seu foco.
               </p>
-            </Card>
+            </div>
           ) : (
-            <div className="space-y-2.5">
+            <div className="space-y-3">
               {topThree.map(task => (
                 <TaskCard
                   key={task.id}
@@ -133,13 +128,13 @@ export default function TodayPage() {
               ))}
             </div>
           )}
-        </div>
+        </section>
 
-        {/* Other tasks */}
+        {/* Outras */}
         {otherTasks.length > 0 && (
-          <div className="space-y-3">
-            <h2 className="text-sm font-semibold text-zinc-500 uppercase tracking-wider">Outras tarefas</h2>
-            <div className="space-y-2.5">
+          <section className="space-y-4">
+            <h2 className="eyebrow">Outras tarefas</h2>
+            <div className="space-y-3">
               {otherTasks.map(task => (
                 <TaskCard
                   key={task.id}
@@ -153,19 +148,17 @@ export default function TodayPage() {
                 />
               ))}
             </div>
-          </div>
+          </section>
         )}
 
-        {/* Completed */}
+        {/* Concluídas */}
         {completedTasks.length > 0 && (
-          <div className="space-y-3">
-            <h2 className="text-sm font-semibold text-zinc-600 flex items-center gap-2">
-              ✅ Concluídas
-              <span className="bg-zinc-800 text-zinc-500 text-xs px-2 py-0.5 rounded-full">
-                {completedTasks.length}
-              </span>
-            </h2>
-            <div className="space-y-2.5">
+          <section className="space-y-4">
+            <div className="flex items-baseline justify-between">
+              <h2 className="eyebrow">Concluídas</h2>
+              <span className="text-xs text-ink-faint tabular-nums">{completedTasks.length}</span>
+            </div>
+            <div className="space-y-3">
               {completedTasks.map(task => (
                 <TaskCard
                   key={task.id}
@@ -179,16 +172,16 @@ export default function TodayPage() {
                 />
               ))}
             </div>
-          </div>
+          </section>
         )}
 
-        {/* Empty state */}
+        {/* Empty */}
         {!loading && tasks.length === 0 && (
           <div className="text-center py-16 space-y-4">
-            <div className="text-6xl">🧠</div>
-            <p className="text-zinc-300 font-semibold text-lg">Tela em branco? Ótimo.</p>
-            <p className="text-zinc-600 text-sm leading-relaxed">
-              Adicione uma tarefa e deixe a IA<br />quebrar em micro-passos.
+            <p className="font-serif text-2xl italic text-ink">Tela em branco?</p>
+            <p className="text-sm text-ink-muted leading-relaxed">
+              Ótimo. Adicione uma tarefa e deixe a IA
+              <br />quebrar em micro-passos.
             </p>
           </div>
         )}
@@ -198,9 +191,9 @@ export default function TodayPage() {
       <button
         onClick={() => setNewTaskOpen(true)}
         aria-label="Nova tarefa"
-        className="fixed bottom-24 right-5 w-[60px] h-[60px] bg-violet-600 hover:bg-violet-500 rounded-full shadow-xl shadow-violet-500/30 flex items-center justify-center transition-all active:scale-90"
+        className="fixed bottom-24 right-6 w-14 h-14 bg-ink hover:bg-terracotta text-background rounded-full shadow-lg shadow-ink/10 flex items-center justify-center transition-all active:scale-90"
       >
-        <Plus className="w-7 h-7 text-white" strokeWidth={2.5} />
+        <Plus className="w-6 h-6" strokeWidth={2} />
       </button>
 
       {/* Sheets & Modals */}
@@ -209,19 +202,16 @@ export default function TodayPage() {
         onClose={() => setNewTaskOpen(false)}
         onCreate={handleCreate}
       />
-
       <BreakdownSheet
         task={breakdownTask}
         onClose={() => setBreakdownTask(null)}
         onSave={saveSteps}
       />
-
       <BookmarkSheet
         task={bookmarkTask}
         onClose={() => setBookmarkTask(null)}
         onSave={saveContextBookmark}
       />
-
       <TimerModal
         task={timerTask}
         durationMinutes={plan?.energy_level && plan.energy_level <= 2 ? 15 : 25}

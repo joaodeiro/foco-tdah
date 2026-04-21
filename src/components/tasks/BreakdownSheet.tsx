@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react'
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet'
-import { Button } from '@/components/ui/button'
 import { Sparkles, Loader2 } from 'lucide-react'
 import { toast } from 'sonner'
 import type { Task } from '@/types'
@@ -23,6 +22,7 @@ export default function BreakdownSheet({ task, onClose, onSave }: Props) {
       setSteps(task.steps.map(s => s.content))
       setEstimatedMinutes(task.estimated_minutes || 25)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [task?.id])
 
   async function handleGenerate() {
@@ -60,45 +60,43 @@ export default function BreakdownSheet({ task, onClose, onSave }: Props) {
 
   return (
     <Sheet open={!!task} onOpenChange={onClose}>
-      <SheetContent side="bottom" className="bg-zinc-950 border-zinc-800 rounded-t-3xl max-h-[85vh] overflow-y-auto">
-        <SheetHeader className="mb-4">
-          <SheetTitle className="text-white text-left text-sm leading-snug">
+      <SheetContent side="bottom" className="bg-background border-hairline rounded-t-3xl max-h-[85vh] overflow-y-auto">
+        <SheetHeader className="mb-5">
+          <p className="eyebrow px-4">Tarefa</p>
+          <SheetTitle className="text-ink font-serif text-xl text-left px-4 leading-snug mt-1">
             {task.title}
           </SheetTitle>
         </SheetHeader>
 
-        <div className="space-y-4">
-          {/* Generate button */}
-          <Button
+        <div className="space-y-4 px-4 pb-6">
+          <button
             onClick={handleGenerate}
             disabled={loading}
-            className="w-full bg-violet-600/20 hover:bg-violet-600/30 text-violet-300 border border-violet-500/30 rounded-xl py-3"
-            variant="outline"
+            className="w-full inline-flex items-center justify-center gap-2 bg-surface border border-hairline hover:border-terracotta/40 text-ink rounded-xl py-3.5 transition-colors disabled:opacity-50"
           >
             {loading ? (
-              <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> Gerando com IA...</>
+              <><Loader2 className="w-4 h-4 animate-spin" /> Gerando com IA…</>
             ) : (
-              <><Sparkles className="w-4 h-4 mr-2" /> Quebrar com IA (Gemini)</>
+              <><Sparkles className="w-4 h-4 text-terracotta" strokeWidth={1.6} /> Quebrar com IA</>
             )}
-          </Button>
+          </button>
 
-          {/* Steps list */}
           {steps.length > 0 && (
-            <div className="space-y-2">
-              <p className="text-xs text-zinc-500">Micro-passos</p>
+            <div className="space-y-3">
+              <p className="eyebrow">Micro-passos</p>
               {steps.map((step, i) => (
-                <div key={`step-${i}`} className="flex items-start gap-2">
-                  <span className="text-violet-500 text-xs mt-2.5 shrink-0">{i + 1}.</span>
+                <div key={`step-${i}`} className="flex items-start gap-3">
+                  <span className="text-ink-faint text-xs mt-3 tabular-nums shrink-0">{String(i + 1).padStart(2, '0')}</span>
                   <input
                     value={step}
                     onChange={e => setSteps(prev => prev.map((s, j) => j === i ? e.target.value : s))}
-                    className="flex-1 bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2 text-sm text-zinc-200 focus:outline-none focus:border-violet-500"
+                    className="flex-1 bg-surface border border-hairline rounded-xl px-3 py-2.5 text-sm text-ink focus:outline-none focus:border-terracotta/50"
                   />
                 </div>
               ))}
 
-              <div className="flex items-center gap-2 pt-1">
-                <span className="text-xs text-zinc-500">Tempo estimado:</span>
+              <div className="flex items-center gap-2 pt-2">
+                <span className="eyebrow">Tempo estimado</span>
                 <input
                   type="number"
                   min={1}
@@ -107,23 +105,23 @@ export default function BreakdownSheet({ task, onClose, onSave }: Props) {
                     const n = Number(e.target.value)
                     setEstimatedMinutes(Number.isFinite(n) && n > 0 ? n : 1)
                   }}
-                  className="w-16 bg-zinc-900 border border-zinc-800 rounded-lg px-2 py-1 text-sm text-white text-center focus:outline-none focus:border-violet-500"
+                  className="w-16 bg-surface border border-hairline rounded-lg px-2 py-1 text-sm text-ink text-center focus:outline-none focus:border-terracotta/50 tabular-nums"
                 />
-                <span className="text-xs text-zinc-500">min</span>
+                <span className="text-xs text-ink-faint">min</span>
               </div>
 
-              <Button
+              <button
                 onClick={handleSave}
-                className="w-full bg-violet-600 hover:bg-violet-500 text-white rounded-xl py-3 font-semibold mt-2"
+                className="w-full bg-ink text-background font-medium rounded-full py-3.5 hover:bg-terracotta transition-colors mt-2"
               >
                 Salvar passos
-              </Button>
+              </button>
             </div>
           )}
 
           {steps.length === 0 && !loading && (
-            <p className="text-center text-xs text-zinc-600 py-4">
-              Clique em &quot;Quebrar com IA&quot; para gerar micro-passos automaticamente.
+            <p className="text-center text-sm text-ink-faint py-4 italic font-serif">
+              Clique em &ldquo;Quebrar com IA&rdquo; para gerar micro-passos.
             </p>
           )}
         </div>

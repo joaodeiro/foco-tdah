@@ -16,8 +16,8 @@ export default function BottomNav() {
   const pathname = usePathname()
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 bg-zinc-950/95 backdrop-blur-md border-t border-zinc-800/80 px-2 pb-[env(safe-area-inset-bottom)]">
-      <div className="flex items-center justify-around max-w-lg mx-auto h-16">
+    <nav className="fixed bottom-0 left-0 right-0 bg-background/90 backdrop-blur-xl border-t border-hairline pb-[env(safe-area-inset-bottom)]">
+      <div className="flex items-center justify-around max-w-lg mx-auto h-16 px-2">
         {nav.map(({ href, label, icon: Icon }) => {
           const active = pathname === href
           return (
@@ -25,21 +25,14 @@ export default function BottomNav() {
               key={href}
               href={href}
               className={cn(
-                'flex flex-col items-center gap-1.5 py-2 px-5 rounded-2xl transition-all min-w-[72px]',
-                active
-                  ? 'text-violet-400'
-                  : 'text-zinc-600 hover:text-zinc-400'
+                'flex flex-col items-center gap-1 py-2 px-4 rounded-2xl transition-colors min-w-[64px]',
+                active ? 'text-ink' : 'text-ink-faint hover:text-ink-muted'
               )}
             >
-              <div className={cn(
-                'relative flex items-center justify-center w-10 h-6 rounded-full transition-all',
-                active && 'bg-violet-500/15'
-              )}>
-                <Icon className="w-5 h-5" strokeWidth={active ? 2.5 : 1.8} />
-              </div>
+              <Icon className="w-5 h-5" strokeWidth={active ? 1.8 : 1.4} />
               <span className={cn(
-                'text-[11px] font-medium tracking-wide',
-                active ? 'text-violet-400' : 'text-zinc-600'
+                'text-[10px] tracking-wide',
+                active ? 'text-ink' : 'text-ink-faint'
               )}>
                 {label}
               </span>

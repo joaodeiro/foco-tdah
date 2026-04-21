@@ -1,11 +1,10 @@
 'use client'
 
 import { Suspense, useEffect, useState } from 'react'
+import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
-import { Button } from '@/components/ui/button'
-import { Card } from '@/components/ui/card'
-import { Brain, Zap } from 'lucide-react'
+import { ArrowLeft, Mail } from 'lucide-react'
 import { toast } from 'sonner'
 
 function LoginErrorToasts() {
@@ -50,87 +49,88 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#0d0d0d] flex flex-col items-center justify-center p-6">
+    <div className="min-h-screen bg-background text-foreground flex flex-col">
       <Suspense fallback={null}>
         <LoginErrorToasts />
       </Suspense>
-      <div className="w-full max-w-md space-y-8">
 
-        {/* Brand */}
-        <div className="text-center space-y-4">
-          <div className="flex items-center justify-center gap-3">
-            <div className="w-14 h-14 rounded-2xl bg-violet-600 flex items-center justify-center shadow-lg shadow-violet-500/30">
-              <Zap className="w-7 h-7 text-white" fill="currentColor" />
-            </div>
-            <span className="text-3xl font-bold text-white tracking-tight">Foco</span>
-          </div>
-          <p className="text-zinc-400 text-base leading-relaxed">
-            Produtividade construída para o cérebro TDAH.
-            <br />
-            <span className="text-violet-400 font-medium">Sem força de vontade. Com estrutura.</span>
-          </p>
-        </div>
+      <header className="px-6 pt-8">
+        <Link
+          href="/"
+          className="inline-flex items-center gap-2 text-sm text-ink-muted hover:text-ink transition-colors"
+        >
+          <ArrowLeft className="w-4 h-4" />
+          Voltar
+        </Link>
+      </header>
 
-        {!sent ? (
-          <form onSubmit={handleLogin} className="space-y-5">
-            <div className="space-y-2">
-              <label htmlFor="email" className="text-sm text-zinc-300 font-medium block">
-                Seu e-mail
-              </label>
-              <input
-                id="email"
-                type="email"
-                value={email}
-                onChange={e => setEmail(e.target.value)}
-                placeholder="você@email.com"
-                required
-                autoFocus
-                className="w-full h-13 bg-zinc-900 border border-zinc-800 rounded-2xl px-4 py-4 text-base text-white placeholder:text-zinc-600 focus:outline-none focus:border-violet-500 focus:ring-2 focus:ring-violet-500/30 transition-all"
-              />
-            </div>
+      <main className="flex-1 flex items-center justify-center px-6 py-10">
+        <div className="w-full max-w-sm space-y-10">
 
-            <Button
-              type="submit"
-              disabled={loading || !email}
-              className="w-full h-13 bg-violet-600 hover:bg-violet-500 text-white font-semibold rounded-2xl transition-all text-base disabled:opacity-50 shadow-lg shadow-violet-500/25"
-            >
-              {loading ? 'Enviando...' : 'Entrar com link mágico ✨'}
-            </Button>
-
-            <p className="text-center text-sm text-zinc-600">
-              Sem senha. Sem fricção. Só um link no seu e-mail.
+          <div className="text-center space-y-3">
+            <p className="eyebrow">Foco</p>
+            <h1 className="font-serif text-4xl leading-tight text-ink">
+              Bem-vindo de volta.
+            </h1>
+            <p className="text-[15px] text-ink-muted leading-relaxed">
+              Te mandamos um link. Sem senha.
             </p>
-          </form>
-        ) : (
-          <Card className="text-center space-y-5 bg-zinc-900 border-zinc-800 rounded-2xl p-8">
-            <div className="text-5xl">📬</div>
-            <div className="space-y-2">
-              <p className="text-white font-semibold text-lg">Link enviado!</p>
-              <p className="text-zinc-400 text-sm leading-relaxed">
-                Verifique <span className="text-violet-400 font-medium">{email}</span>
-                <br />e clique no link para entrar.
-              </p>
-            </div>
-            <button
-              onClick={() => setSent(false)}
-              className="text-zinc-500 text-sm underline hover:text-zinc-300 transition-colors"
-            >
-              Usar outro e-mail
-            </button>
-          </Card>
-        )}
-
-        {/* Science note */}
-        <div className="flex items-start gap-3 bg-zinc-900/60 border border-zinc-800/60 rounded-2xl p-4">
-          <div className="w-8 h-8 rounded-xl bg-violet-500/15 flex items-center justify-center shrink-0">
-            <Brain className="w-4 h-4 text-violet-400" />
           </div>
-          <p className="text-sm text-zinc-500 leading-relaxed">
-            Senhas geram fricção cognitiva. Cérebro TDAH prefere caminhos sem obstáculos.
-          </p>
-        </div>
 
-      </div>
+          {!sent ? (
+            <form onSubmit={handleLogin} className="space-y-5">
+              <div className="space-y-2">
+                <label htmlFor="email" className="eyebrow block">
+                  E-mail
+                </label>
+                <input
+                  id="email"
+                  type="email"
+                  value={email}
+                  onChange={e => setEmail(e.target.value)}
+                  placeholder="você@email.com"
+                  required
+                  autoFocus
+                  className="w-full bg-surface border border-hairline rounded-xl px-4 py-3.5 text-base text-ink placeholder:text-ink-faint focus:outline-none focus:border-terracotta focus:ring-2 focus:ring-terracotta/15 transition-all"
+                />
+              </div>
+
+              <button
+                type="submit"
+                disabled={loading || !email}
+                className="w-full bg-ink text-background font-medium rounded-full py-3.5 transition-all hover:bg-terracotta disabled:opacity-50 disabled:hover:bg-ink"
+              >
+                {loading ? 'Enviando…' : 'Enviar link mágico'}
+              </button>
+
+              <p className="text-center text-xs text-ink-faint leading-relaxed">
+                Sem senha. Sem fricção. Só um link no seu e-mail.
+              </p>
+            </form>
+          ) : (
+            <div className="text-center space-y-5 bg-surface border border-hairline rounded-2xl p-8">
+              <Mail className="w-6 h-6 mx-auto text-terracotta" strokeWidth={1.6} />
+              <div className="space-y-2">
+                <p className="font-serif text-2xl text-ink">Link enviado</p>
+                <p className="text-sm text-ink-muted leading-relaxed">
+                  Verifique <span className="text-ink font-medium">{email}</span>
+                  <br />e clique no link para entrar.
+                </p>
+              </div>
+              <button
+                onClick={() => setSent(false)}
+                className="text-sm text-ink-muted underline decoration-hairline underline-offset-4 hover:text-ink transition-colors"
+              >
+                Usar outro e-mail
+              </button>
+            </div>
+          )}
+        </div>
+      </main>
+
+      <footer className="px-6 pb-8 text-center text-xs text-ink-faint italic font-serif">
+        Senhas geram fricção cognitiva.
+      </footer>
     </div>
   )
 }

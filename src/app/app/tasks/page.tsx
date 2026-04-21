@@ -7,7 +7,7 @@ import NewTaskSheet from '@/components/tasks/NewTaskSheet'
 import BreakdownSheet from '@/components/tasks/BreakdownSheet'
 import BookmarkSheet from '@/components/tasks/BookmarkSheet'
 import TimerModal from '@/components/timer/TimerModal'
-import { Plus, CheckSquare } from 'lucide-react'
+import { Plus } from 'lucide-react'
 import type { Task } from '@/types'
 
 export default function TasksPage() {
@@ -29,36 +29,42 @@ export default function TasksPage() {
     setTimerTask(null)
   }
 
-  return (
-    <div className="min-h-screen bg-[#0f0f0f]">
-      <div className="px-4 pt-12 pb-4 space-y-1">
-        <div className="flex items-center gap-2">
-          <CheckSquare className="w-4 h-4 text-violet-400" />
-        </div>
-        <h1 className="text-2xl font-bold text-white">Tarefas</h1>
-      </div>
+  const filters: { value: typeof filter; label: string }[] = [
+    { value: 'pending', label: 'Pendentes' },
+    { value: 'completed', label: 'Concluídas' },
+    { value: 'all', label: 'Todas' },
+  ]
 
-      <div className="px-4 space-y-4 pb-8">
-        {/* Filter tabs */}
-        <div className="flex bg-zinc-900 rounded-xl p-1 gap-1">
-          {(['pending', 'completed', 'all'] as const).map(f => (
+  return (
+    <div className="min-h-screen bg-background">
+      <header className="px-6 pt-14 pb-6 max-w-xl mx-auto">
+        <p className="eyebrow">Coleção</p>
+        <h1 className="font-serif text-5xl leading-none text-ink mt-3">Tarefas</h1>
+      </header>
+
+      <div className="px-6 space-y-6 pb-24 max-w-xl mx-auto">
+
+        {/* Filter pills */}
+        <div className="flex gap-1.5">
+          {filters.map(f => (
             <button
-              key={f}
-              onClick={() => setFilter(f)}
-              className={`flex-1 py-1.5 rounded-lg text-xs font-medium transition-colors ${
-                filter === f ? 'bg-zinc-700 text-white' : 'text-zinc-500'
+              key={f.value}
+              onClick={() => setFilter(f.value)}
+              className={`px-4 py-1.5 rounded-full text-[13px] transition-colors border ${
+                filter === f.value
+                  ? 'bg-ink text-background border-ink'
+                  : 'bg-transparent text-ink-muted border-hairline hover:border-ink/40'
               }`}
             >
-              {f === 'pending' ? 'Pendentes' : f === 'completed' ? 'Concluídas' : 'Todas'}
+              {f.label}
             </button>
           ))}
         </div>
 
-        {/* Tasks list */}
-        <div className="space-y-2">
+        <div className="space-y-3">
           {!loading && filtered.length === 0 && (
-            <p className="text-center text-zinc-600 text-sm py-8">
-              {filter === 'completed' ? 'Nenhuma tarefa concluída ainda.' : 'Nenhuma tarefa pendente. 🎉'}
+            <p className="text-center text-sm text-ink-faint py-12 italic font-serif">
+              {filter === 'completed' ? 'Nenhuma concluída ainda.' : 'Nada pendente por aqui.'}
             </p>
           )}
           {filtered.map(task => (
@@ -76,34 +82,18 @@ export default function TasksPage() {
         </div>
       </div>
 
-      {/* FAB */}
       <button
         onClick={() => setNewTaskOpen(true)}
-        className="fixed bottom-24 right-4 w-14 h-14 bg-violet-600 hover:bg-violet-500 rounded-full shadow-lg shadow-violet-500/25 flex items-center justify-center transition-all active:scale-95"
+        aria-label="Nova tarefa"
+        className="fixed bottom-24 right-6 w-14 h-14 bg-ink hover:bg-terracotta text-background rounded-full shadow-lg shadow-ink/10 flex items-center justify-center transition-all active:scale-90"
       >
-        <Plus className="w-6 h-6 text-white" strokeWidth={2.5} />
+        <Plus className="w-6 h-6" strokeWidth={2} />
       </button>
 
-      <NewTaskSheet
-        open={newTaskOpen}
-        onClose={() => setNewTaskOpen(false)}
-        onCreate={(title, priority) => createTask(title, priority)}
-      />
-      <BreakdownSheet
-        task={breakdownTask}
-        onClose={() => setBreakdownTask(null)}
-        onSave={saveSteps}
-      />
-      <BookmarkSheet
-        task={bookmarkTask}
-        onClose={() => setBookmarkTask(null)}
-        onSave={saveContextBookmark}
-      />
-      <TimerModal
-        task={timerTask}
-        onClose={() => setTimerTask(null)}
-        onComplete={handleCompleteTask}
-      />
+      <NewTaskSheet open={newTaskOpen} onClose={() => setNewTaskOpen(false)} onCreate={(t, p) => createTask(t, p)} />
+      <BreakdownSheet task={breakdownTask} onClose={() => setBreakdownTask(null)} onSave={saveSteps} />
+      <BookmarkSheet task={bookmarkTask} onClose={() => setBookmarkTask(null)} onSave={saveContextBookmark} />
+      <TimerModal task={timerTask} onClose={() => setTimerTask(null)} onComplete={handleCompleteTask} />
     </div>
   )
 }

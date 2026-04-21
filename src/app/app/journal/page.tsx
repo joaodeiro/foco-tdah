@@ -3,8 +3,7 @@
 import { useState, useEffect } from 'react'
 import { useJournal } from '@/hooks/useJournal'
 import { useTasks } from '@/hooks/useTasks'
-import { Button } from '@/components/ui/button'
-import { BookOpen, Flame, Trophy, Plus, X } from 'lucide-react'
+import { Flame, Trophy, Plus, X, Check } from 'lucide-react'
 import { formatDisplayDate, todayDate } from '@/lib/utils'
 import type { MoodLevel } from '@/types'
 
@@ -16,7 +15,7 @@ const moodLabels: Record<number, string> = {
 }
 
 export default function JournalPage() {
-  const { entry, streak, loading, saveEntry } = useJournal()
+  const { entry, streak, saveEntry } = useJournal()
   const { tasks } = useTasks()
   const [moodEnd, setMoodEnd] = useState<MoodLevel | null>(null)
   const [reflection, setReflection] = useState('')
@@ -35,7 +34,6 @@ export default function JournalPage() {
     }
   }, [entry])
 
-  // Auto-populate wins from completed tasks on first load only
   useEffect(() => {
     if (!winsInitialized && !entry && completedToday.length > 0) {
       setWins(completedToday.map(t => t.title))
@@ -63,63 +61,41 @@ export default function JournalPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#0f0f0f]">
-      {/* Header */}
-      <div className="px-4 pt-12 pb-4 space-y-1">
-        <div className="flex items-center gap-2">
-          <BookOpen className="w-4 h-4 text-violet-400" />
-          <span className="text-xs text-zinc-500 capitalize">{formatDisplayDate(todayDate())}</span>
-        </div>
-        <h1 className="text-2xl font-bold text-white">Diário</h1>
-      </div>
+    <div className="min-h-screen bg-background">
+      <header className="px-6 pt-14 pb-6 max-w-xl mx-auto">
+        <p className="eyebrow capitalize">{formatDisplayDate(todayDate())}</p>
+        <h1 className="font-serif text-5xl leading-none text-ink mt-3">Diário</h1>
+      </header>
 
-      <div className="px-4 space-y-5 pb-8">
+      <div className="px-6 space-y-10 pb-24 max-w-xl mx-auto">
 
-        {/* Streak */}
-        <div className="flex gap-3">
-          <div className="flex-1 bg-zinc-900 rounded-2xl p-4 border border-zinc-800 flex items-center gap-3">
-            <Flame className="w-5 h-5 text-orange-400" />
-            <div>
-              <p className="text-xl font-bold text-white">{streak.current}</p>
-              <p className="text-xs text-zinc-500">dias seguidos</p>
-            </div>
-          </div>
-          <div className="flex-1 bg-zinc-900 rounded-2xl p-4 border border-zinc-800 flex items-center gap-3">
-            <Trophy className="w-5 h-5 text-amber-400" />
-            <div>
-              <p className="text-xl font-bold text-white">{streak.longest}</p>
-              <p className="text-xs text-zinc-500">recorde</p>
-            </div>
-          </div>
-          <div className="flex-1 bg-zinc-900 rounded-2xl p-4 border border-zinc-800 flex items-center gap-3">
-            <span className="text-xl">✅</span>
-            <div>
-              <p className="text-xl font-bold text-white">{completedToday.length}</p>
-              <p className="text-xs text-zinc-500">hoje</p>
-            </div>
-          </div>
-        </div>
+        {/* Stats */}
+        <section className="grid grid-cols-3 gap-3">
+          <Stat icon={<Flame className="w-4 h-4 text-terracotta" strokeWidth={1.6} />} value={streak.current} label="dias seguidos" />
+          <Stat icon={<Trophy className="w-4 h-4 text-ochre" strokeWidth={1.6} />} value={streak.longest} label="recorde" />
+          <Stat icon={<Check className="w-4 h-4 text-sage" strokeWidth={1.6} />} value={completedToday.length} label="hoje" />
+        </section>
 
         {/* Wins */}
-        <div className="bg-zinc-900 rounded-2xl p-4 border border-zinc-800 space-y-3">
-          <h2 className="text-sm font-semibold text-zinc-200">
-            🏆 O que você conquistou hoje?
-          </h2>
-          <p className="text-xs text-zinc-600">
-            Foco no que foi feito, não no que faltou.
-          </p>
+        <section className="space-y-4">
+          <div>
+            <h2 className="font-serif text-xl text-ink">Conquistas de hoje</h2>
+            <p className="text-sm text-ink-muted leading-relaxed mt-1">
+              Foco no que foi feito, não no que faltou.
+            </p>
+          </div>
 
           <div className="space-y-2">
             {wins.map((win, i) => (
-              <div key={`${i}-${win}`} className="flex items-center gap-2 bg-zinc-800 rounded-lg px-3 py-2">
-                <span className="text-green-400 text-sm">✓</span>
-                <span className="flex-1 text-sm text-zinc-200">{win}</span>
+              <div key={`${i}-${win}`} className="flex items-center gap-3 bg-surface border border-hairline rounded-xl px-4 py-3">
+                <Check className="w-4 h-4 text-sage shrink-0" strokeWidth={1.8} />
+                <span className="flex-1 text-[15px] text-ink">{win}</span>
                 <button
                   onClick={() => removeWin(i)}
-                  className="text-zinc-600 hover:text-zinc-400"
+                  className="text-ink-faint hover:text-destructive transition-colors"
                   aria-label="Remover conquista"
                 >
-                  <X className="w-3 h-3" />
+                  <X className="w-4 h-4" />
                 </button>
               </div>
             ))}
@@ -130,57 +106,70 @@ export default function JournalPage() {
               value={newWin}
               onChange={e => setNewWin(e.target.value)}
               onKeyDown={e => e.key === 'Enter' && addWin()}
-              placeholder="Adicionar conquista..."
-              className="flex-1 bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2 text-sm text-zinc-200 placeholder:text-zinc-600 focus:outline-none focus:border-violet-500"
+              placeholder="Adicionar conquista…"
+              className="flex-1 bg-surface border border-hairline rounded-xl px-4 py-2.5 text-[15px] text-ink placeholder:text-ink-faint focus:outline-none focus:border-terracotta/50"
             />
             <button
               onClick={addWin}
-              className="w-8 h-8 bg-violet-600/20 border border-violet-500/30 rounded-lg flex items-center justify-center text-violet-400"
+              aria-label="Adicionar"
+              className="w-11 h-11 bg-ink text-background rounded-xl flex items-center justify-center hover:bg-terracotta transition-colors"
             >
               <Plus className="w-4 h-4" />
             </button>
           </div>
-        </div>
+        </section>
 
-        {/* Mood end */}
-        <div className="bg-zinc-900 rounded-2xl p-4 border border-zinc-800 space-y-3">
-          <h2 className="text-sm font-semibold text-zinc-200">Como você está agora?</h2>
+        {/* Mood */}
+        <section className="space-y-4">
+          <h2 className="font-serif text-xl text-ink">Como você está agora?</h2>
           <div className="flex gap-2">
             {([1, 2, 3, 4, 5] as MoodLevel[]).map(m => (
               <button
                 key={m}
                 onClick={() => setMoodEnd(m)}
-                className={`flex-1 flex flex-col items-center gap-1 py-3 rounded-xl transition-all ${
+                className={`flex-1 flex flex-col items-center gap-1 py-3 rounded-xl transition-all border ${
                   moodEnd === m
-                    ? 'bg-violet-600/30 border border-violet-500/50 scale-105'
-                    : 'bg-zinc-800 border border-transparent'
+                    ? 'bg-ink text-background border-ink'
+                    : 'bg-surface text-ink border-hairline hover:border-ink/30'
                 }`}
               >
                 <span className="text-xl">{moodEmojis[m]}</span>
-                <span className="text-[9px] text-zinc-500">{moodLabels[m]}</span>
+                <span className="text-[10px] opacity-70">{moodLabels[m]}</span>
               </button>
             ))}
           </div>
-        </div>
+        </section>
 
         {/* Reflection */}
-        <div className="bg-zinc-900 rounded-2xl p-4 border border-zinc-800 space-y-3">
-          <h2 className="text-sm font-semibold text-zinc-200">Reflexão (opcional)</h2>
+        <section className="space-y-3">
+          <h2 className="font-serif text-xl text-ink">Reflexão</h2>
           <textarea
             value={reflection}
             onChange={e => setReflection(e.target.value)}
             placeholder="O que funcionou hoje? O que poderia ser diferente?"
-            rows={4}
-            className="w-full bg-zinc-800 border border-zinc-700 rounded-xl px-3 py-2 text-sm text-zinc-200 placeholder:text-zinc-600 focus:outline-none focus:border-violet-500 resize-none"
+            rows={5}
+            className="w-full bg-surface border border-hairline rounded-xl px-4 py-3 text-[15px] text-ink placeholder:text-ink-faint focus:outline-none focus:border-terracotta/50 resize-none leading-relaxed"
           />
-        </div>
+        </section>
 
-        <Button
+        <button
           onClick={handleSave}
-          className="w-full bg-violet-600 hover:bg-violet-500 text-white rounded-xl py-3 font-semibold"
+          className="w-full bg-ink text-background font-medium rounded-full py-3.5 hover:bg-terracotta transition-colors"
         >
-          Salvar diário ✨
-        </Button>
+          Salvar diário
+        </button>
+      </div>
+    </div>
+  )
+}
+
+function Stat({ icon, value, label }: { icon: React.ReactNode; value: number; label: string }) {
+  return (
+    <div className="bg-surface border border-hairline rounded-2xl p-4 space-y-2">
+      {icon}
+      <div>
+        <p className="font-serif text-2xl text-ink tabular-nums leading-none">{value}</p>
+        <p className="text-[11px] text-ink-faint mt-1">{label}</p>
       </div>
     </div>
   )

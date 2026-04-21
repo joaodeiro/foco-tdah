@@ -2,7 +2,6 @@
 
 import { useState } from 'react'
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet'
-import { Button } from '@/components/ui/button'
 import type { Task } from '@/types'
 
 interface Props {
@@ -24,55 +23,55 @@ export default function NewTaskSheet({ open, onClose, onCreate }: Props) {
     onClose()
   }
 
-  const priorities: { value: Task['priority']; label: string; emoji: string }[] = [
-    { value: 'high', label: 'Alta', emoji: '🔴' },
-    { value: 'medium', label: 'Média', emoji: '🟡' },
-    { value: 'low', label: 'Baixa', emoji: '⚪' },
+  const priorities: { value: Task['priority']; label: string }[] = [
+    { value: 'high', label: 'Alta' },
+    { value: 'medium', label: 'Média' },
+    { value: 'low', label: 'Baixa' },
   ]
 
   return (
     <Sheet open={open} onOpenChange={onClose}>
-      <SheetContent side="bottom" className="bg-zinc-950 border-zinc-800 rounded-t-3xl">
-        <SheetHeader className="mb-4">
-          <SheetTitle className="text-white text-left">Nova tarefa</SheetTitle>
+      <SheetContent side="bottom" className="bg-background border-hairline rounded-t-3xl">
+        <SheetHeader className="mb-5">
+          <SheetTitle className="text-ink font-serif text-2xl text-left">Nova tarefa</SheetTitle>
         </SheetHeader>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-5 px-4 pb-6">
           <input
             autoFocus
             value={title}
             onChange={e => setTitle(e.target.value)}
             placeholder="O que precisa ser feito?"
-            className="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-4 py-3 text-white placeholder:text-zinc-600 focus:outline-none focus:border-violet-500 text-sm"
+            className="w-full bg-surface border border-hairline rounded-xl px-4 py-3.5 text-[15px] text-ink placeholder:text-ink-faint focus:outline-none focus:border-terracotta/50"
           />
 
           <div className="space-y-2">
-            <p className="text-xs text-zinc-500">Prioridade</p>
+            <p className="eyebrow">Prioridade</p>
             <div className="flex gap-2">
               {priorities.map(p => (
                 <button
                   key={p.value}
                   type="button"
                   onClick={() => setPriority(p.value)}
-                  className={`flex-1 py-2 rounded-xl text-xs font-medium transition-colors border ${
+                  className={`flex-1 py-2 rounded-full text-sm transition-colors border ${
                     priority === p.value
-                      ? 'bg-violet-600/30 border-violet-500/50 text-violet-300'
-                      : 'bg-zinc-900 border-zinc-800 text-zinc-500'
+                      ? 'bg-ink text-background border-ink'
+                      : 'bg-transparent text-ink-muted border-hairline hover:border-ink/40'
                   }`}
                 >
-                  {p.emoji} {p.label}
+                  {p.label}
                 </button>
               ))}
             </div>
           </div>
 
-          <Button
+          <button
             type="submit"
             disabled={!title.trim()}
-            className="w-full bg-violet-600 hover:bg-violet-500 text-white rounded-xl py-3 font-semibold"
+            className="w-full bg-ink text-background font-medium rounded-full py-3.5 hover:bg-terracotta transition-colors disabled:opacity-50"
           >
             Criar tarefa
-          </Button>
+          </button>
         </form>
       </SheetContent>
     </Sheet>

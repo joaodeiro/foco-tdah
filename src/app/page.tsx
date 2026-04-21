@@ -1,76 +1,130 @@
 import Link from "next/link"
-import { Zap, Brain, Timer, Sparkles } from "lucide-react"
-import { Card } from "@/components/ui/card"
+import { ArrowRight, Brain, Timer, Sparkles, Compass } from "lucide-react"
 
-const features = [
+const principles = [
   {
     icon: Brain,
-    text: "Baseado em neurociência do TDAH (Barkley, Hallowell, Brown)",
+    title: "Neurociência aplicada",
+    body: "Fundamentado no trabalho de Barkley, Hallowell e Brown — não em produtividade genérica.",
   },
   {
     icon: Sparkles,
-    text: "IA quebra qualquer tarefa em micro-passos acionáveis",
+    title: "Tarefa em micro-passos",
+    body: "A IA quebra qualquer tarefa em ações pequenas o suficiente para começar agora.",
   },
   {
     icon: Timer,
-    text: "Timer visual para combater cegueira temporal",
+    title: "Timer contra cegueira temporal",
+    body: "Você vê o tempo passando. O cérebro TDAH entende visual, não abstração.",
   },
   {
-    icon: Zap,
-    text: "Celebra o que você fez, não o que faltou",
+    icon: Compass,
+    title: "Foco no feito, não no que faltou",
+    body: "Diário de conquistas e streaks que celebram o progresso, não a culpa.",
   },
 ]
 
 export default function LandingPage() {
   return (
-    <div className="min-h-screen bg-[#0d0d0d] flex flex-col items-center justify-center p-6">
-      <div className="w-full max-w-md space-y-10 text-center">
-
-        {/* Brand */}
-        <div className="space-y-5">
-          <div className="flex items-center justify-center gap-3">
-            <div className="w-16 h-16 rounded-2xl bg-violet-600 flex items-center justify-center shadow-lg shadow-violet-500/30">
-              <Zap className="w-8 h-8 text-white" fill="currentColor" />
-            </div>
-            <span className="text-4xl font-bold text-white tracking-tight">Foco</span>
-          </div>
-          <h1 className="text-2xl font-semibold text-zinc-100 leading-snug">
-            Produtividade construída<br />para o cérebro TDAH
-          </h1>
-          <p className="text-zinc-400 text-base leading-relaxed">
-            Sem listas intermináveis. Sem força de vontade.
-            <br />
-            Com estrutura que funciona <em>com</em> o seu cérebro.
-          </p>
+    <div className="min-h-screen bg-background text-foreground">
+      {/* Top bar */}
+      <header className="px-6 md:px-10 pt-8 pb-4 flex items-center justify-between">
+        <div className="flex items-center gap-2.5">
+          <span className="text-2xl font-serif italic leading-none text-ink">Foco</span>
+          <span className="w-1 h-1 rounded-full bg-terracotta" />
         </div>
+        <Link
+          href="/auth/login"
+          className="text-sm text-ink-muted hover:text-ink transition-colors"
+        >
+          Entrar
+        </Link>
+      </header>
 
-        {/* Features */}
-        <div className="grid grid-cols-1 gap-3 text-left">
-          {features.map(({ icon: Icon, text }) => (
-            <div
-              key={text}
-              className="flex items-center gap-4 bg-zinc-900/80 border border-zinc-800 p-4 rounded-2xl"
-            >
-              <div className="w-10 h-10 rounded-xl bg-violet-500/15 flex items-center justify-center shrink-0">
-                <Icon className="w-5 h-5 text-violet-400" />
-              </div>
-              <p className="text-sm text-zinc-300 leading-relaxed">{text}</p>
+      {/* Hero */}
+      <section className="px-6 md:px-10 pt-10 md:pt-20 pb-14 max-w-3xl mx-auto">
+        <p className="eyebrow mb-6">Para o cérebro 2e · PT-BR</p>
+        <h1 className="font-serif text-5xl md:text-7xl leading-[1.02] tracking-tight text-ink">
+          Produtividade que
+          <br />
+          trabalha <em className="text-terracotta">com</em> seu
+          <br />
+          cérebro, não contra.
+        </h1>
+        <p className="mt-8 max-w-lg text-lg text-ink-muted leading-relaxed">
+          Sem listas intermináveis. Sem força de vontade.
+          Estrutura externa pensada para como a mente TDAH
+          realmente funciona.
+        </p>
+
+        <div className="mt-10 flex items-center gap-5">
+          <Link
+            href="/auth/login"
+            className="group inline-flex items-center gap-2 bg-ink text-background px-6 py-3.5 rounded-full text-[15px] font-medium transition-all hover:bg-terracotta"
+          >
+            Começar agora
+            <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-0.5" />
+          </Link>
+          <span className="text-sm text-ink-faint">Grátis · Sem senha</span>
+        </div>
+      </section>
+
+      {/* Divider rule */}
+      <div className="px-6 md:px-10 max-w-3xl mx-auto">
+        <div className="hairline" />
+      </div>
+
+      {/* Principles */}
+      <section className="px-6 md:px-10 py-16 max-w-3xl mx-auto">
+        <p className="eyebrow mb-10">Princípios</p>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-12">
+          {principles.map(({ icon: Icon, title, body }) => (
+            <div key={title} className="space-y-3">
+              <Icon className="w-5 h-5 text-terracotta" strokeWidth={1.6} />
+              <h3 className="font-serif text-2xl leading-tight text-ink">{title}</h3>
+              <p className="text-[15px] text-ink-muted leading-relaxed">{body}</p>
             </div>
           ))}
         </div>
+      </section>
 
-        {/* CTA */}
-        <Link
-          href="/auth/login"
-          className="block w-full bg-violet-600 hover:bg-violet-500 active:scale-[0.98] text-white font-semibold py-4 rounded-2xl transition-all text-center text-base shadow-lg shadow-violet-500/25"
-        >
-          Começar agora ✨
-        </Link>
+      {/* Pull quote */}
+      <section className="px-6 md:px-10 py-20 max-w-2xl mx-auto text-center">
+        <blockquote className="font-serif text-3xl md:text-4xl italic leading-snug text-ink">
+          &ldquo;O TDAH não é déficit de atenção. É dificuldade de
+          regular a atenção — direcionar ela para onde importa,
+          quando importa.&rdquo;
+        </blockquote>
+        <p className="mt-6 eyebrow">— Russell Barkley</p>
+      </section>
 
-        <p className="text-sm text-zinc-600">
-          PT-BR · Grátis · Sem senha
-        </p>
-      </div>
+      {/* Final CTA */}
+      <section className="px-6 md:px-10 pb-24 max-w-3xl mx-auto">
+        <div className="hairline mb-16" />
+        <div className="text-center space-y-8">
+          <h2 className="font-serif text-4xl md:text-5xl leading-tight text-ink">
+            Comece onde você está.
+            <br />
+            <em>Agora.</em>
+          </h2>
+          <Link
+            href="/auth/login"
+            className="group inline-flex items-center gap-2 bg-ink text-background px-7 py-4 rounded-full text-[15px] font-medium transition-all hover:bg-terracotta"
+          >
+            Entrar com link mágico
+            <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-0.5" />
+          </Link>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="px-6 md:px-10 pb-10 max-w-3xl mx-auto">
+        <div className="hairline mb-6" />
+        <div className="flex items-center justify-between text-xs text-ink-faint">
+          <span>Foco · Feito com cuidado em PT-BR</span>
+          <span>2025</span>
+        </div>
+      </footer>
     </div>
   )
 }

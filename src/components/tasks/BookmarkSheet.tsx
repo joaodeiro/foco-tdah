@@ -2,7 +2,6 @@
 
 import { useState } from 'react'
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet'
-import { Button } from '@/components/ui/button'
 import { Bookmark } from 'lucide-react'
 import type { Task } from '@/types'
 
@@ -25,35 +24,35 @@ export default function BookmarkSheet({ task, onClose, onSave }: Props) {
 
   return (
     <Sheet open={!!task} onOpenChange={onClose}>
-      <SheetContent side="bottom" className="bg-zinc-950 border-zinc-800 rounded-t-3xl">
-        <SheetHeader className="mb-4">
-          <SheetTitle className="text-white text-left flex items-center gap-2">
-            <Bookmark className="w-4 h-4 text-amber-400" />
+      <SheetContent side="bottom" className="bg-background border-hairline rounded-t-3xl">
+        <SheetHeader className="mb-5">
+          <SheetTitle className="text-ink font-serif text-2xl text-left flex items-center gap-2 px-4">
+            <Bookmark className="w-4 h-4 text-ochre" strokeWidth={1.6} />
             Salvar contexto
           </SheetTitle>
         </SheetHeader>
 
-        <div className="space-y-4">
-          <p className="text-xs text-zinc-500 leading-relaxed">
+        <div className="space-y-4 px-4 pb-6">
+          <p className="text-sm text-ink-muted leading-relaxed">
             Anote onde você parou para retomar sem custo cognitivo.
-            O que você estava fazendo? O que vem depois?
+            O que estava fazendo? O que vem depois?
           </p>
 
           <textarea
             autoFocus
             value={text}
             onChange={e => setText(e.target.value)}
-            placeholder="Ex: Fiz o outline, próximo é escrever o intro. Arquivo na pasta /docs"
-            rows={4}
-            className="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-4 py-3 text-white placeholder:text-zinc-600 focus:outline-none focus:border-amber-500 text-sm resize-none"
+            placeholder="Ex: Fiz o outline, próximo é escrever a intro. Arquivo em /docs"
+            rows={5}
+            className="w-full bg-surface border border-hairline rounded-xl px-4 py-3 text-[15px] text-ink placeholder:text-ink-faint focus:outline-none focus:border-ochre/50 resize-none leading-relaxed"
           />
 
-          <Button
+          <button
             onClick={handleSave}
-            className="w-full bg-amber-600 hover:bg-amber-500 text-white rounded-xl py-3 font-semibold"
+            className="w-full bg-ink text-background font-medium rounded-full py-3.5 hover:bg-ochre transition-colors"
           >
-            Salvar e pausar ✋
-          </Button>
+            Salvar e pausar
+          </button>
         </div>
       </SheetContent>
     </Sheet>

@@ -1,9 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { CheckCircle2, Circle, ChevronDown, ChevronUp, Sparkles, Bookmark, Trash2, Play } from 'lucide-react'
-import { Badge } from '@/components/ui/badge'
-import { Card } from '@/components/ui/card'
+import { Check, Circle, ChevronDown, ChevronUp, Sparkles, Bookmark, Trash2, Play } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import type { Task } from '@/types'
 
@@ -18,16 +16,16 @@ interface Props {
   isTopThree?: boolean
 }
 
-const priorityColors = {
-  high: 'bg-red-500/15 text-red-400 border-red-500/25',
-  medium: 'bg-amber-500/15 text-amber-400 border-amber-500/25',
-  low: 'bg-zinc-700/40 text-zinc-400 border-zinc-700/60',
+const priorityStyles = {
+  high: 'text-terracotta',
+  medium: 'text-ochre',
+  low: 'text-ink-faint',
 }
 
 const priorityLabels = {
-  high: '🔴 Alta',
-  medium: '🟡 Média',
-  low: '⚪ Baixa',
+  high: 'Alta',
+  medium: 'Média',
+  low: 'Baixa',
 }
 
 export default function TaskCard({
@@ -47,54 +45,55 @@ export default function TaskCard({
   const progress = hasSteps ? Math.round((stepsCompleted / task.steps.length) * 100) : 0
 
   return (
-    <Card className={cn(
-      'rounded-2xl border transition-all duration-200 overflow-hidden',
+    <article className={cn(
+      'rounded-2xl border transition-all overflow-hidden',
       completed
-        ? 'bg-zinc-900/20 border-zinc-800/40 opacity-55'
+        ? 'bg-transparent border-hairline/60 opacity-55'
         : isTopThree
-          ? 'bg-zinc-900 border-violet-500/25 shadow-lg shadow-violet-500/8'
-          : 'bg-zinc-900 border-zinc-800/80',
+          ? 'bg-card border-terracotta/30 shadow-sm shadow-terracotta/5'
+          : 'bg-card border-hairline',
     )}>
       <div className="p-5 space-y-4">
         {/* Header */}
-        <div className="flex items-start gap-3.5">
+        <div className="flex items-start gap-4">
           <button
             onClick={() => !completed && onComplete(task.id)}
             className="mt-0.5 shrink-0 transition-transform active:scale-90"
             aria-label={completed ? 'Concluída' : 'Marcar como concluída'}
           >
             {completed
-              ? <CheckCircle2 className="w-6 h-6 text-violet-400" />
-              : <Circle className="w-6 h-6 text-zinc-600 hover:text-zinc-300 transition-colors" />
+              ? (
+                <div className="w-5 h-5 rounded-full bg-ink flex items-center justify-center">
+                  <Check className="w-3 h-3 text-background" strokeWidth={3} />
+                </div>
+              )
+              : <Circle className="w-5 h-5 text-ink-faint hover:text-ink transition-colors" strokeWidth={1.6} />
             }
           </button>
 
           <div className="flex-1 min-w-0">
             <p className={cn(
-              'text-base font-medium leading-snug',
-              completed ? 'line-through text-zinc-600' : 'text-zinc-100',
+              'text-[16px] leading-snug font-serif',
+              completed ? 'line-through text-ink-faint' : 'text-ink',
             )}>
               {task.title}
-              {task.context_bookmark && (
-                <span className="ml-2 text-xs text-amber-400 font-normal">● contexto salvo</span>
-              )}
             </p>
 
-            <div className="flex items-center gap-2 mt-2 flex-wrap">
-              <Badge
-                variant="outline"
-                className={cn('text-xs h-6 px-2', priorityColors[task.priority])}
-              >
+            <div className="flex items-center gap-3 mt-2 text-xs flex-wrap">
+              <span className={cn('inline-flex items-center gap-1', priorityStyles[task.priority])}>
+                <span className="w-1 h-1 rounded-full bg-current" />
                 {priorityLabels[task.priority]}
-              </Badge>
+              </span>
               {isTopThree && (
-                <Badge variant="outline" className="text-xs h-6 px-2 bg-violet-500/15 text-violet-300 border-violet-500/25">
-                  ⚡ Top 3
-                </Badge>
+                <span className="text-terracotta italic font-serif">Top 3</span>
               )}
               {task.estimated_minutes && (
-                <span className="text-xs text-zinc-600">
-                  ~{task.estimated_minutes}min
+                <span className="text-ink-faint tabular-nums">~{task.estimated_minutes} min</span>
+              )}
+              {task.context_bookmark && (
+                <span className="text-ochre inline-flex items-center gap-1">
+                  <Bookmark className="w-3 h-3" strokeWidth={1.6} />
+                  contexto salvo
                 </span>
               )}
             </div>
@@ -103,69 +102,73 @@ export default function TaskCard({
           {hasSteps && (
             <button
               onClick={() => setExpanded(!expanded)}
-              className="text-zinc-600 hover:text-zinc-300 transition-colors p-1"
+              className="text-ink-faint hover:text-ink transition-colors p-1 -mr-1"
               aria-label={expanded ? 'Recolher passos' : 'Expandir passos'}
             >
               {expanded
-                ? <ChevronUp className="w-5 h-5" />
-                : <ChevronDown className="w-5 h-5" />
+                ? <ChevronUp className="w-4 h-4" />
+                : <ChevronDown className="w-4 h-4" />
               }
             </button>
           )}
         </div>
 
-        {/* Steps progress bar */}
+        {/* Steps progress */}
         {hasSteps && !completed && (
           <div className="space-y-1.5">
-            <div className="h-1.5 bg-zinc-800 rounded-full overflow-hidden">
+            <div className="h-[3px] bg-surface-2 rounded-full overflow-hidden">
               <div
-                className="h-full bg-violet-500 rounded-full transition-all duration-500"
+                className="h-full bg-terracotta rounded-full transition-all duration-500"
                 style={{ width: `${progress}%` }}
               />
             </div>
-            <p className="text-xs text-zinc-600">
-              {stepsCompleted} de {task.steps.length} passos concluídos
+            <p className="text-xs text-ink-faint tabular-nums">
+              {stepsCompleted} de {task.steps.length} passos
             </p>
           </div>
         )}
 
         {/* Context bookmark preview */}
         {task.context_bookmark && !expanded && (
-          <div className="text-sm text-amber-400/90 bg-amber-500/8 rounded-xl px-3.5 py-3 border border-amber-500/15">
-            💡 {task.context_bookmark}
+          <div className="text-sm text-ink-muted bg-surface rounded-xl px-4 py-3 border border-hairline italic font-serif leading-relaxed">
+            {task.context_bookmark}
           </div>
         )}
 
         {/* Steps list */}
         {expanded && hasSteps && (
-          <div className="space-y-2.5 pt-1 border-t border-zinc-800/60">
-            <p className="text-xs text-zinc-600 uppercase tracking-wider font-medium pt-1">Micro-passos</p>
+          <div className="space-y-2.5 pt-3 border-t border-hairline">
+            <p className="eyebrow">Micro-passos</p>
             {task.steps.map((step, i) => (
               <button
                 key={step.id}
                 onClick={() => onToggleStep(task.id, step.id, !step.completed)}
                 className="w-full flex items-start gap-3 text-left group"
               >
-                <div className="flex items-center justify-center w-5 h-5 shrink-0 mt-0.5">
+                <div className="flex items-center justify-center w-4 h-4 shrink-0 mt-1">
                   {step.completed
-                    ? <CheckCircle2 className="w-5 h-5 text-violet-400" />
-                    : <Circle className="w-5 h-5 text-zinc-600 group-hover:text-zinc-400 transition-colors" />
+                    ? (
+                      <div className="w-4 h-4 rounded-full bg-ink flex items-center justify-center">
+                        <Check className="w-2.5 h-2.5 text-background" strokeWidth={3} />
+                      </div>
+                    )
+                    : <Circle className="w-4 h-4 text-ink-faint group-hover:text-ink transition-colors" strokeWidth={1.6} />
                   }
                 </div>
                 <span className={cn(
-                  'text-sm leading-relaxed',
-                  step.completed ? 'line-through text-zinc-600' : 'text-zinc-300',
+                  'text-[14px] leading-relaxed flex-1',
+                  step.completed ? 'line-through text-ink-faint' : 'text-ink-muted',
                 )}>
-                  <span className="text-zinc-600 mr-1">{i + 1}.</span>
+                  <span className="text-ink-faint mr-1.5 tabular-nums">{i + 1}.</span>
                   {step.content}
                 </span>
               </button>
             ))}
 
             {task.context_bookmark && (
-              <div className="text-sm text-amber-400/90 bg-amber-500/8 rounded-xl px-3.5 py-3 border border-amber-500/15 mt-3">
-                <p className="text-amber-400 font-medium text-xs mb-1">📌 Onde parei:</p>
-                {task.context_bookmark}
+              <div className="text-sm text-ink-muted bg-surface rounded-xl px-4 py-3 border border-hairline mt-3 space-y-1">
+                <p className="eyebrow">Onde parei</p>
+                <p className="italic font-serif leading-relaxed">{task.context_bookmark}</p>
               </div>
             )}
           </div>
@@ -176,35 +179,35 @@ export default function TaskCard({
           <div className="flex items-center gap-2 pt-1">
             <button
               onClick={() => onStartTimer(task)}
-              className="flex items-center gap-2 bg-violet-600/20 hover:bg-violet-600/30 text-violet-300 text-sm px-4 py-2.5 rounded-xl transition-colors border border-violet-500/20 font-medium"
+              className="inline-flex items-center gap-1.5 bg-ink hover:bg-terracotta text-background text-[13px] px-4 py-2 rounded-full transition-colors"
             >
-              <Play className="w-3.5 h-3.5" />
+              <Play className="w-3 h-3" fill="currentColor" strokeWidth={0} />
               Focar
             </button>
             <button
               onClick={() => onBreakdown(task)}
-              className="flex items-center gap-2 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 text-sm px-4 py-2.5 rounded-xl transition-colors font-medium"
+              className="inline-flex items-center gap-1.5 bg-transparent hover:bg-surface text-ink-muted hover:text-ink text-[13px] px-4 py-2 rounded-full transition-colors border border-hairline"
             >
-              <Sparkles className="w-3.5 h-3.5" />
-              {hasSteps ? 'Refazer' : 'Quebrar IA'}
+              <Sparkles className="w-3 h-3" strokeWidth={1.6} />
+              {hasSteps ? 'Refazer' : 'Quebrar'}
             </button>
             <button
               onClick={() => onBookmark(task)}
-              className="flex items-center gap-2 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 text-sm px-4 py-2.5 rounded-xl transition-colors font-medium"
+              className="inline-flex items-center gap-1.5 bg-transparent hover:bg-surface text-ink-muted hover:text-ink text-[13px] px-3 py-2 rounded-full transition-colors border border-hairline"
+              aria-label="Salvar contexto"
             >
-              <Bookmark className="w-3.5 h-3.5" />
-              Pausar
+              <Bookmark className="w-3 h-3" strokeWidth={1.6} />
             </button>
             <button
               onClick={() => onDelete(task.id)}
-              className="ml-auto text-zinc-700 hover:text-red-400 transition-colors p-2 rounded-xl hover:bg-red-500/10"
+              className="ml-auto text-ink-faint hover:text-destructive transition-colors p-2"
               aria-label="Deletar tarefa"
             >
-              <Trash2 className="w-4 h-4" />
+              <Trash2 className="w-4 h-4" strokeWidth={1.6} />
             </button>
           </div>
         )}
       </div>
-    </Card>
+    </article>
   )
 }
