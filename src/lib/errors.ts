@@ -3,6 +3,10 @@ import { toast } from 'sonner'
 /**
  * Camada de tradução de erros → mensagens acionáveis para o usuário.
  *
+ * ┌──────────────────────────────────────────────────────────────┐
+ * │  REGISTRO COMPLETO DE TODAS AS MENSAGENS: /docs/messages.md  │
+ * └──────────────────────────────────────────────────────────────┘
+ *
  * Princípios:
  * - Norman (Design of Everyday Things): toda mensagem responde "o quê",
  *   "por quê" e "como resolver".
