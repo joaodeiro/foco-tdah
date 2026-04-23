@@ -1,10 +1,11 @@
 'use client'
 
-import { useState } from 'react'
+import { Suspense, useEffect, useRef, useState } from 'react'
 import { Sparkles } from 'lucide-react'
 import { useTasks } from '@/hooks/useTasks'
 import { useDayPlan } from '@/hooks/useDayPlan'
 import { useProfile, resolveSessionDuration } from '@/hooks/useProfile'
+import { useFocusParams } from '@/hooks/useFocusParams'
 import TaskCard from '@/components/tasks/TaskCard'
 import BreakdownSheet from '@/components/tasks/BreakdownSheet'
 import BookmarkSheet from '@/components/tasks/BookmarkSheet'
@@ -17,14 +18,53 @@ const energyLabels = ['', 'Muito baixa', 'Baixa', 'Média', 'Boa', 'Ótima']
 const energyEmojis = ['', '😴', '😕', '😐', '😊', '⚡']
 
 export default function TodayPage() {
+  return (
+    <Suspense fallback={null}>
+      <TodayPageInner />
+    </Suspense>
+  )
+}
+
+function TodayPageInner() {
   const { tasks, loading, completeTask, deleteTask, saveSteps, toggleStep, saveContextBookmark } = useTasks()
   const { plan, setEnergyLevel, suggestTopThree } = useDayPlan()
   const { preferredMinutes } = useProfile()
+  const focusParams = useFocusParams()
 
   const [breakdownTask, setBreakdownTask] = useState<Task | null>(null)
   const [bookmarkTask, setBookmarkTask] = useState<Task | null>(null)
   const [timerTask, setTimerTask] = useState<Task | null>(null)
   const [suggestingTopThree, setSuggestingTopThree] = useState(false)
+
+  // S-03: deep link handling — abre sessao de foco automaticamente se
+  // parâmetros estiverem presentes. Roda uma vez após tarefas carregarem.
+  const deepLinkHandled = useRef(false)
+  useEffect(() => {
+    if (deepLinkHandled.current) return
+    if (!focusParams.focus) return
+    if (tasks.length === 0) return // aguarda tarefas carregarem
+
+    deepLinkHandled.current = true
+
+    // Encontra tarefa por id exato, título parcial ou cai no primeiro Top 3
+    const byId = focusParams.taskId
+      ? tasks.find(t => t.id === focusParams.taskId)
+      : null
+    const byTitle = focusParams.taskTitle
+      ? tasks.find(t => t.title.toLowerCase().includes(focusParams.taskTitle!.toLowerCase()))
+      : null
+    const topThreeIds = plan?.top_three_ids || []
+    const firstTop3 = tasks.find(t => topThreeIds.includes(t.id) && t.status !== 'completed')
+
+    const target = byId ?? byTitle ?? firstTop3
+
+    if (target) {
+      setTimerTask(target)
+    } else {
+      showInfo('Nenhuma tarefa para focar.', 'Adicione uma tarefa e tente de novo.')
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [tasks.length, focusParams.focus, focusParams.taskId, focusParams.taskTitle, plan?.top_three_ids])
 
   const today = todayDate()
   const topThreeIds = plan?.top_three_ids || []
@@ -217,7 +257,7 @@ export default function TodayPage() {
       />
       <TimerModal
         task={timerTask}
-        durationMinutes={resolveSessionDuration(preferredMinutes, plan?.energy_level)}
+        durationMinutes={focusParams.duration ?? resolveSessionDuration(preferredMinutes, plan?.energy_level)}
         onClose={() => setTimerTask(null)}
         onComplete={handleCompleteTask}
       />
