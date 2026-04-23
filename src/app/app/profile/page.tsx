@@ -6,6 +6,7 @@ import { Input } from '@/components/ui/input'
 import { LogOut } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { showError, showSuccess } from '@/lib/errors'
+import ShortcutsGuide from '@/components/profile/ShortcutsGuide'
 
 export default function ProfilePage() {
   const [email, setEmail] = useState('')
@@ -107,6 +108,9 @@ export default function ProfilePage() {
             ))}
           </div>
         </section>
+
+        {/* Shortcuts iOS — S-02 */}
+        <ShortcutsGuide />
 
         {/* Science note */}
         <section className="bg-surface border border-hairline rounded-2xl p-6 space-y-3">
