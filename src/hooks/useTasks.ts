@@ -5,6 +5,7 @@ import { createClient } from '@/lib/supabase/client'
 import { todayDate } from '@/lib/utils'
 import type { Task, TaskStep } from '@/types'
 import { showError, showSuccess } from '@/lib/errors'
+import { appendWin } from '@/lib/journal'
 
 export function useTasks(date?: string) {
   const [tasks, setTasks] = useState<Task[]>([])
@@ -68,11 +69,18 @@ export function useTasks(date?: string) {
   }
 
   async function completeTask(id: string) {
+    const task = tasks.find(t => t.id === id)
     const ok = await updateTask(id, {
       status: 'completed',
       completed_at: new Date().toISOString(),
     })
-    if (ok) showSuccess('Tarefa concluída.', 'Mais uma conquista para o diário.')
+    if (ok) {
+      showSuccess('Tarefa concluída.', 'Registrei no diário de hoje.')
+      // F-03: registro automático pós-sessão no diário
+      if (task) {
+        appendWin(task.title).catch(() => {/* não propaga */})
+      }
+    }
   }
 
   async function deleteTask(id: string) {
