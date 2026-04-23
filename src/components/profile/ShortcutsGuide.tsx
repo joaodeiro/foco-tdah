@@ -118,6 +118,44 @@ export default function ShortcutsGuide() {
       <p className="text-[13px] text-ink-faint leading-relaxed italic font-serif">
         Dica: toque no atalho da tela de início no momento em que você quer começar. Em 2 segundos, iPhone vai estar em modo foco, tela em cinza, Kairos aberto numa sessão. Baixo custo de entrada, alto custo de saída.
       </p>
+
+      {/* S-01: agenda via Automation */}
+      <div className="bg-surface border border-hairline rounded-2xl p-5 space-y-4 mt-4">
+        <p className="serial">Agendamento automático</p>
+        <p className="text-[14px] text-ink-muted leading-relaxed">
+          O iOS pode disparar o atalho em horários fixos. Isso cria
+          janelas recorrentes de foco sem depender da sua lembrança.
+        </p>
+        <ol className="space-y-3 text-[14px] text-ink-muted leading-relaxed">
+          <li className="flex gap-3">
+            <span className="font-mono text-[10px] text-ink-faint tabular-nums mt-0.5 shrink-0 w-5">01</span>
+            <span>No app <span className="text-ink">Atalhos</span>, vá na aba <span className="text-ink">Automação</span> (ícone de relógio).</span>
+          </li>
+          <li className="flex gap-3">
+            <span className="font-mono text-[10px] text-ink-faint tabular-nums mt-0.5 shrink-0 w-5">02</span>
+            <span>Toque em <span className="text-ink">+</span> e escolha <span className="text-ink">Horário</span>.</span>
+          </li>
+          <li className="flex gap-3">
+            <span className="font-mono text-[10px] text-ink-faint tabular-nums mt-0.5 shrink-0 w-5">03</span>
+            <span>Defina a hora e os dias da semana (ex.: <em className="font-serif">09:00, seg a sex</em>).</span>
+          </li>
+          <li className="flex gap-3">
+            <span className="font-mono text-[10px] text-ink-faint tabular-nums mt-0.5 shrink-0 w-5">04</span>
+            <span>Em <span className="text-ink">Executar</span>, escolha <span className="text-ink">Imediatamente</span> pra dispensar confirmação manual (ou <span className="text-ink">Ao Executar</span> se preferir avisar).</span>
+          </li>
+          <li className="flex gap-3">
+            <span className="font-mono text-[10px] text-ink-faint tabular-nums mt-0.5 shrink-0 w-5">05</span>
+            <span>Adicione a ação <span className="text-ink">Executar Atalho</span> e escolha o atalho Foco que você criou acima.</span>
+          </li>
+          <li className="flex gap-3">
+            <span className="font-mono text-[10px] text-ink-faint tabular-nums mt-0.5 shrink-0 w-5">06</span>
+            <span>Concluído. Toda vez que o horário chegar, o iPhone entra em foco e abre Kairos sozinho.</span>
+          </li>
+        </ol>
+        <p className="text-[13px] text-ink-faint leading-relaxed italic font-serif">
+          Combinação recomendada: janela de 09:00 a 10:30 de seg a sex com Foco 45, seguida de pausa livre das 10:30 às 11:00. Cadência sustenta melhor que maratona.
+        </p>
+      </div>
     </section>
   )
 }
