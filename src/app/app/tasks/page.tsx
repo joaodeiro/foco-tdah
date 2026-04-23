@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { useTasks } from '@/hooks/useTasks'
+import { useProfile } from '@/hooks/useProfile'
 import TaskCard from '@/components/tasks/TaskCard'
 import BreakdownSheet from '@/components/tasks/BreakdownSheet'
 import BookmarkSheet from '@/components/tasks/BookmarkSheet'
@@ -10,6 +11,7 @@ import type { Task } from '@/types'
 
 export default function TasksPage() {
   const { tasks, loading, completeTask, deleteTask, saveSteps, toggleStep, saveContextBookmark } = useTasks()
+  const { preferredMinutes } = useProfile()
   const [breakdownTask, setBreakdownTask] = useState<Task | null>(null)
   const [bookmarkTask, setBookmarkTask] = useState<Task | null>(null)
   const [timerTask, setTimerTask] = useState<Task | null>(null)
@@ -85,7 +87,7 @@ export default function TasksPage() {
 
       <BreakdownSheet task={breakdownTask} onClose={() => setBreakdownTask(null)} onSave={saveSteps} />
       <BookmarkSheet task={bookmarkTask} onClose={() => setBookmarkTask(null)} onSave={saveContextBookmark} />
-      <TimerModal task={timerTask} onClose={() => setTimerTask(null)} onComplete={handleCompleteTask} />
+      <TimerModal task={timerTask} durationMinutes={preferredMinutes} onClose={() => setTimerTask(null)} onComplete={handleCompleteTask} />
     </div>
   )
 }

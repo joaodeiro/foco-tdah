@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { Sparkles } from 'lucide-react'
 import { useTasks } from '@/hooks/useTasks'
 import { useDayPlan } from '@/hooks/useDayPlan'
+import { useProfile, resolveSessionDuration } from '@/hooks/useProfile'
 import TaskCard from '@/components/tasks/TaskCard'
 import BreakdownSheet from '@/components/tasks/BreakdownSheet'
 import BookmarkSheet from '@/components/tasks/BookmarkSheet'
@@ -18,6 +19,7 @@ const energyEmojis = ['', '😴', '😕', '😐', '😊', '⚡']
 export default function TodayPage() {
   const { tasks, loading, completeTask, deleteTask, saveSteps, toggleStep, saveContextBookmark } = useTasks()
   const { plan, setEnergyLevel, suggestTopThree } = useDayPlan()
+  const { preferredMinutes } = useProfile()
 
   const [breakdownTask, setBreakdownTask] = useState<Task | null>(null)
   const [bookmarkTask, setBookmarkTask] = useState<Task | null>(null)
@@ -215,7 +217,7 @@ export default function TodayPage() {
       />
       <TimerModal
         task={timerTask}
-        durationMinutes={plan?.energy_level && plan.energy_level <= 2 ? 15 : 25}
+        durationMinutes={resolveSessionDuration(preferredMinutes, plan?.energy_level)}
         onClose={() => setTimerTask(null)}
         onComplete={handleCompleteTask}
       />
