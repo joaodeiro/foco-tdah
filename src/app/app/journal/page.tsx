@@ -6,6 +6,7 @@ import { useTasks } from '@/hooks/useTasks'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { Flame, Trophy, Plus, X, Check } from 'lucide-react'
+import CommitmentSection from '@/components/focus/CommitmentSection'
 import { formatDisplayDate, todayDate } from '@/lib/utils'
 import type { MoodLevel } from '@/types'
 
@@ -158,6 +159,9 @@ export default function JournalPage() {
             rows={5}
           />
         </section>
+
+        {/* C-02: check-in dos compromissos */}
+        <CommitmentSection variant="checkin" />
 
         <button
           onClick={handleSave}

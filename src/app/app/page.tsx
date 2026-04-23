@@ -10,6 +10,7 @@ import TaskCard from '@/components/tasks/TaskCard'
 import BreakdownSheet from '@/components/tasks/BreakdownSheet'
 import BookmarkSheet from '@/components/tasks/BookmarkSheet'
 import TimerModal from '@/components/timer/TimerModal'
+import CommitmentSection from '@/components/focus/CommitmentSection'
 import { formatDisplayDate, todayDate } from '@/lib/utils'
 import type { Task } from '@/types'
 import { showInfo, showSuccess } from '@/lib/errors'
@@ -231,6 +232,9 @@ function TodayPageInner() {
             </div>
           </section>
         )}
+
+        {/* C-01: compromisso diário */}
+        <CommitmentSection variant="declare" />
 
         {/* Empty */}
         {!loading && tasks.length === 0 && (
