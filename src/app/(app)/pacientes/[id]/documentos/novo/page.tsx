@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/lib/supabase/client";
+import { avisarErro } from "@/lib/errors";
 import type { TipoDocumento } from "@/lib/types";
 import { agoraLocal } from "@/lib/format";
 import { Button, Card, Field, Input, Select, Textarea } from "@/components/ui";
@@ -47,7 +48,9 @@ export default function NovoDocumentoPage(props: { params: Promise<{ id: string 
   async function salvar(e: React.FormEvent) {
     e.preventDefault();
     if (!conteudo.trim()) {
-      toast.error("Escreva o conteúdo do documento.");
+      toast.error("Documento sem conteúdo", {
+        description: "Escreva o texto do documento antes de salvar.",
+      });
       return;
     }
     setSalvando(true);
@@ -65,7 +68,7 @@ export default function NovoDocumentoPage(props: { params: Promise<{ id: string 
         .single();
 
       if (error || !novo) {
-        toast.error("Não foi possível salvar o documento.");
+        avisarErro(error, "salvar o documento");
         return;
       }
       toast.success("Documento salvo! Abrindo para impressão.");

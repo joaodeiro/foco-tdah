@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { ArrowLeft, Plus, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/lib/supabase/client";
+import { avisarErro } from "@/lib/errors";
 import type { ReceitaItem } from "@/lib/types";
 import { agoraLocal } from "@/lib/format";
 import { Button, Card, Field, Input, Textarea } from "@/components/ui";
@@ -30,7 +31,9 @@ export default function NovaReceitaPage(props: { params: Promise<{ id: string }>
     e.preventDefault();
     const preenchidos = itens.filter((i) => i.medicamento.trim());
     if (preenchidos.length === 0) {
-      toast.error("Adicione pelo menos um medicamento.");
+      toast.error("Receita sem medicamentos", {
+        description: "Preencha pelo menos o nome do primeiro medicamento antes de salvar.",
+      });
       return;
     }
     setSalvando(true);
@@ -48,7 +51,7 @@ export default function NovaReceitaPage(props: { params: Promise<{ id: string }>
         .single();
 
       if (error || !nova) {
-        toast.error("Não foi possível salvar a receita.");
+        avisarErro(error, "salvar a receita");
         return;
       }
       toast.success("Receita salva! Abrindo para impressão.");

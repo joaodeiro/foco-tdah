@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/lib/supabase/client";
+import { avisarErro } from "@/lib/errors";
 import type { Tutor } from "@/lib/types";
 import { parseValor } from "@/lib/format";
 import { Button, Card, Field, Select } from "@/components/ui";
@@ -37,7 +38,9 @@ export default function NovoPacientePage() {
   async function salvar(e: React.FormEvent) {
     e.preventDefault();
     if (tutorId === "novo" && !tutor.nome.trim()) {
-      toast.error("Informe o nome do tutor.");
+      toast.error("Falta o nome do tutor", {
+        description: "Preencha o nome completo do tutor para salvar o cadastro.",
+      });
       return;
     }
     setSalvando(true);
@@ -51,7 +54,7 @@ export default function NovoPacientePage() {
           .select("id")
           .single();
         if (error || !data) {
-          toast.error("Não foi possível salvar o tutor.");
+          avisarErro(error, "salvar o tutor");
           return;
         }
         idTutor = data.id;
@@ -76,7 +79,7 @@ export default function NovoPacientePage() {
         .single();
 
       if (erroAnimal || !novoAnimal) {
-        toast.error("Não foi possível salvar o animal.");
+        avisarErro(erroAnimal, "salvar o animal");
         return;
       }
 

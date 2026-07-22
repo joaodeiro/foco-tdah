@@ -3,8 +3,8 @@
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { Cat, Dog, Plus, Search } from "lucide-react";
-import { toast } from "sonner";
 import { supabase } from "@/lib/supabase/client";
+import { avisarErro } from "@/lib/errors";
 import type { Animal } from "@/lib/types";
 import { ESPECIE_LABEL, SEXO_LABEL, cn, idadeAnimal } from "@/lib/format";
 import { EmptyState, Input, Spinner, btnCls } from "@/components/ui";
@@ -20,7 +20,7 @@ export default function PacientesPage() {
       .order("nome")
       .then(({ data, error }) => {
         if (error) {
-          toast.error("Não foi possível carregar os pacientes.");
+          avisarErro(error, "carregar os pacientes");
           setAnimais([]);
           return;
         }

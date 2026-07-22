@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Plus, Printer, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/lib/supabase/client";
+import { avisarErro } from "@/lib/errors";
 import type { Orcamento } from "@/lib/types";
 import { brl, fmtData, totalOrcamento } from "@/lib/format";
 import { Button, Card, EmptyState, Spinner, btnCls } from "@/components/ui";
@@ -18,7 +19,7 @@ export default function OrcamentosPage() {
       .select("*, animal:animais(id, nome, especie, tutor:tutores(id, nome)), tutor:tutores(id, nome)")
       .order("data", { ascending: false });
     if (error) {
-      toast.error("Não foi possível carregar os orçamentos.");
+      avisarErro(error, "carregar os orçamentos");
       setOrcamentos([]);
       return;
     }
@@ -33,7 +34,7 @@ export default function OrcamentosPage() {
     if (!window.confirm("Excluir este orçamento? Essa ação não tem volta.")) return;
     const { error } = await supabase.from("orcamentos").delete().eq("id", id);
     if (error) {
-      toast.error("Não foi possível excluir. Tente novamente.");
+      avisarErro(error, "excluir o orçamento");
       return;
     }
     toast.success("Excluído.");
