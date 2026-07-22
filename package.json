@@ -1,17 +1,27 @@
 {
-  "name": "kairos",
+  "name": "gestaovet",
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "web": "pnpm --filter @kairos/web dev",
-    "web:build": "pnpm --filter @kairos/web build",
-    "mobile": "pnpm --filter @kairos/mobile start",
-    "mobile:ios": "pnpm --filter @kairos/mobile ios",
-    "lint": "pnpm -r lint",
-    "typecheck": "pnpm -r typecheck"
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start"
   },
-  "packageManager": "pnpm@9.12.0",
-  "engines": {
-    "node": ">=20"
+  "dependencies": {
+    "@supabase/ssr": "0.12.3",
+    "@supabase/supabase-js": "2.110.8",
+    "lucide-react": "1.25.0",
+    "next": "16.2.11",
+    "react": "19.2.8",
+    "react-dom": "19.2.8",
+    "sonner": "2.0.7"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "4.3.3",
+    "@types/node": "26.1.1",
+    "@types/react": "19.2.17",
+    "@types/react-dom": "19.2.3",
+    "tailwindcss": "4.3.3",
+    "typescript": "5.9.3"
   }
 }
