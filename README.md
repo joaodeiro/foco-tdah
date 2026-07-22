@@ -25,10 +25,11 @@ A impressão usa a impressão do navegador (Ctrl+P automático pelo botão **Imp
 ## Rodando localmente
 
 ```bash
-cp .env.example .env.local   # já vem com as chaves públicas do projeto Supabase "gestaovet"
 npm install
 npm run dev
 ```
+
+As chaves públicas do Supabase ficam em `src/lib/supabase/config.ts` (constantes no código, de propósito — o projeto da Vercel herda variáveis de ambiente do app anterior que teriam prioridade sobre um `.env`).
 
 Abra http://localhost:3000, crie sua conta (e-mail e senha) e comece pelo menu **Ajustes** preenchendo seu nome e CRMV.
 
