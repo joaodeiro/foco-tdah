@@ -19,6 +19,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/lib/supabase/client";
+import { avisarErro } from "@/lib/errors";
 import type { Animal, Consulta, Documento, Orcamento, Receita } from "@/lib/types";
 import {
   ESPECIE_LABEL,
@@ -62,7 +63,9 @@ export default function FichaPacientePage(props: { params: Promise<{ id: string 
     ]);
 
     if (rAnimal.error || !rAnimal.data) {
-      toast.error("Paciente não encontrado.");
+      toast.error("Paciente não encontrado", {
+        description: "Ele pode ter sido excluído. Voltamos para a lista de pacientes.",
+      });
       router.push("/pacientes");
       return;
     }
@@ -82,7 +85,7 @@ export default function FichaPacientePage(props: { params: Promise<{ id: string 
     if (!window.confirm(`Excluir ${nome}? Essa ação não tem volta.`)) return;
     const { error } = await supabase.from(tabela).delete().eq("id", itemId);
     if (error) {
-      toast.error("Não foi possível excluir. Tente novamente.");
+      avisarErro(error, `excluir ${nome}`);
       return;
     }
     toast.success("Excluído.");

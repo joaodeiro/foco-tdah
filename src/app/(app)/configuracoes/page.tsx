@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { supabase } from "@/lib/supabase/client";
+import { avisarErro } from "@/lib/errors";
 import { Button, Card, Field, Input, Spinner } from "@/components/ui";
 
 type PerfilForm = {
@@ -66,7 +67,7 @@ export default function ConfiguracoesPage() {
         .from("perfis")
         .upsert({ user_id: user.id, ...perfil, updated_at: new Date().toISOString() });
       if (error) {
-        toast.error("Não foi possível salvar o perfil.");
+        avisarErro(error, "salvar o perfil");
         return;
       }
       toast.success("Perfil salvo!");

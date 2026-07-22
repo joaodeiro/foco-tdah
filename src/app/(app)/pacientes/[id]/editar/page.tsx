@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/lib/supabase/client";
+import { avisarErro } from "@/lib/errors";
 import type { Animal } from "@/lib/types";
 import { parseValor } from "@/lib/format";
 import { Button, Card, Spinner } from "@/components/ui";
@@ -36,7 +37,9 @@ export default function EditarPacientePage(props: { params: Promise<{ id: string
       .single()
       .then(({ data, error }) => {
         if (error || !data) {
-          toast.error("Paciente não encontrado.");
+          toast.error("Paciente não encontrado", {
+            description: "Ele pode ter sido excluído. Voltamos para a lista de pacientes.",
+          });
           router.push("/pacientes");
           return;
         }
@@ -94,7 +97,7 @@ export default function EditarPacientePage(props: { params: Promise<{ id: string
         : { error: null };
 
       if (erroAnimal || erroTutor) {
-        toast.error("Não foi possível salvar as alterações.");
+        avisarErro(erroAnimal ?? erroTutor, "salvar as alterações");
         return;
       }
       toast.success("Dados atualizados!");

@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { Check, Pencil, Plus, Trash2, X } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/lib/supabase/client";
+import { avisarErro } from "@/lib/errors";
 import type { Servico } from "@/lib/types";
 import { brl, parseValor } from "@/lib/format";
 import { Button, Card, EmptyState, Input, Spinner } from "@/components/ui";
@@ -32,7 +33,7 @@ export default function ServicosPage() {
   async function carregar() {
     const { data, error } = await supabase.from("servicos").select("*").order("nome");
     if (error) {
-      toast.error("Não foi possível carregar os serviços.");
+      avisarErro(error, "carregar os serviços");
       setServicos([]);
       return;
     }
@@ -50,7 +51,7 @@ export default function ServicosPage() {
       .from("servicos")
       .insert({ nome: novoNome.trim(), valor: parseValor(novoValor) });
     if (error) {
-      toast.error("Não foi possível adicionar o serviço.");
+      avisarErro(error, "adicionar o serviço");
       return;
     }
     toast.success("Serviço adicionado!");
@@ -64,7 +65,7 @@ export default function ServicosPage() {
       .from("servicos")
       .insert(EXEMPLOS.map((nome) => ({ nome, valor: 0 })));
     if (error) {
-      toast.error("Não foi possível adicionar os exemplos.");
+      avisarErro(error, "criar a lista de exemplos");
       return;
     }
     toast.success("Lista criada! Agora é só ajustar os valores.");
@@ -77,7 +78,7 @@ export default function ServicosPage() {
       .update({ nome: editNome.trim(), valor: parseValor(editValor) })
       .eq("id", id);
     if (error) {
-      toast.error("Não foi possível salvar a alteração.");
+      avisarErro(error, "salvar a alteração");
       return;
     }
     toast.success("Serviço atualizado!");
@@ -89,7 +90,7 @@ export default function ServicosPage() {
     if (!window.confirm("Excluir este serviço da tabela de preços?")) return;
     const { error } = await supabase.from("servicos").delete().eq("id", id);
     if (error) {
-      toast.error("Não foi possível excluir. Tente novamente.");
+      avisarErro(error, "excluir o serviço");
       return;
     }
     toast.success("Excluído.");

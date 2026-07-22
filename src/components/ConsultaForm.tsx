@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { supabase } from "@/lib/supabase/client";
+import { avisarErro } from "@/lib/errors";
 import type { Consulta } from "@/lib/types";
 import { agoraLocal, isoParaInputLocal, parseValor } from "@/lib/format";
 import { Button, Card, Field, Input, Textarea } from "@/components/ui";
@@ -44,7 +45,7 @@ export function ConsultaForm({ animalId, consulta }: { animalId: string; consult
         : await supabase.from("consultas").insert(registro);
 
       if (error) {
-        toast.error("Não foi possível salvar a consulta.");
+        avisarErro(error, "salvar a consulta");
         return;
       }
       toast.success(consulta ? "Consulta atualizada!" : "Consulta registrada!");

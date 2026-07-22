@@ -6,6 +6,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { ArrowLeft, Plus, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/lib/supabase/client";
+import { avisarErro } from "@/lib/errors";
 import type { Animal, OrcamentoItem, Servico } from "@/lib/types";
 import { agoraLocal, brl, parseValor, totalOrcamento } from "@/lib/format";
 import { Button, Card, Field, Input, Select, Spinner, Textarea } from "@/components/ui";
@@ -71,7 +72,9 @@ function NovoOrcamentoForm() {
   async function salvar(e: React.FormEvent) {
     e.preventDefault();
     if (itens.length === 0) {
-      toast.error("Adicione pelo menos um item ao orçamento.");
+      toast.error("Orçamento sem itens", {
+        description: "Adicione pelo menos um item com descrição antes de salvar.",
+      });
       return;
     }
     setSalvando(true);
@@ -91,7 +94,7 @@ function NovoOrcamentoForm() {
         .single();
 
       if (error || !novo) {
-        toast.error("Não foi possível salvar o orçamento.");
+        avisarErro(error, "salvar o orçamento");
         return;
       }
       toast.success("Orçamento salvo! Abrindo para impressão.");

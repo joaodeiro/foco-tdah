@@ -23,7 +23,9 @@ export default function EditarConsultaPage(props: { params: Promise<{ id: string
       .single()
       .then(({ data, error }) => {
         if (error || !data) {
-          toast.error("Consulta não encontrada.");
+          toast.error("Consulta não encontrada", {
+            description: "Ela pode ter sido excluída. Voltamos para a lista de pacientes.",
+          });
           router.push("/pacientes");
           return;
         }
